@@ -1,0 +1,29 @@
+<Project>
+   
+  <PropertyGroup>
+    <Authors>Simon Condon</Authors>
+    <Company />
+    <Product>SCSetTrie</Product>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/sdcondon/SCSetTrie.git</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageProjectUrl>https://sdcondon.net/SCSetTrie/</PackageProjectUrl>
+    <PackageReleaseNotes>See https://github.com/sdcondon/SCSetTrie/releases.</PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Copyright>2023 Simon Condon</Copyright>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <!-- NB: timestamp below doesn't include seconds because depending on such a package gets VS into an infinite restore loop.. -->
+    <Version>0.0.0-local.$([System.DateTime]::Now.ToString(yyMMddTHHmm))</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' != 'true' And Exists('C:\Users\simon\Coding\Packages')">
+    <PackageOutputPath>C:\Users\simon\Coding\Packages</PackageOutputPath>
+  </PropertyGroup>
+</Project>
