@@ -78,7 +78,7 @@ namespace SCSetTrie.Tests
             .ThenReturns((tc, rv) => rv.Should().BeEquivalentTo(tc.ExpectedResults));
 
 
-        // TODO: tests for hash code collisions
+        // TODO: tests for comparison collisions
 
         private record LookupManyTestCase(
             IEnumerable<IEnumerable<int>> Content,

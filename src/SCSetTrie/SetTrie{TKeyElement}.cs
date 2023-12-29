@@ -104,6 +104,10 @@ public class SetTrie<TKeyElement>
         actualTree = new(root, elementComparer, content.Select(t => KeyValuePair.Create(t, t)));
     }
 
+    /// <summary>
+    /// Adds a set to the trie.
+    /// </summary>
+    /// <param name="key">The set to add.</param>
     public void Add(ISet<TKeyElement> key)
     {
         actualTree.Add(key, key);

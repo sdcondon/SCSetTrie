@@ -132,6 +132,11 @@ public class SetTrie<TKeyElement,TValue>
         }
     }
 
+    /// <summary>
+    /// Adds a set and associated value to the trie.
+    /// </summary>
+    /// <param name="key">The set to add.</param>
+    /// <param name="value">The value to associate with the set.</param>
     public void Add(ISet<TKeyElement> key, TValue value)
     {
         var currentNode = root;

@@ -9,8 +9,8 @@ namespace SCSetTrie;
 /// An implementation of <see cref="ISetTrieNode{TKeyElement, TValue}"/> that just stores things
 /// in memory, using a <see cref="Dictionary{TKey, TValue}"/> for the children of a node.
 /// </summary>
-/// <typeparam name="TKeyElement"></typeparam>
-/// <typeparam name="TValue"></typeparam>
+/// <typeparam name="TKeyElement">The type of each element of the stored sets.</typeparam>
+/// <typeparam name="TValue">The type of the value associated with each stored set.</typeparam>
 public class SetTrieDictionaryNode<TKeyElement, TValue> : ISetTrieNode<TKeyElement, TValue>
     where TKeyElement : notnull
 {
