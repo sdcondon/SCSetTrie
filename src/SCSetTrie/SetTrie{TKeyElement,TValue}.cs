@@ -145,10 +145,12 @@ public class SetTrie<TKeyElement,TValue>
                     yield return value;
                 }
             }
-
-            foreach (var value in ExpandNode(node))
+            else
             {
-                yield return value;
+                foreach (var value in ExpandNode(node))
+                {
+                    yield return value;
+                }
             }
         }
     }
