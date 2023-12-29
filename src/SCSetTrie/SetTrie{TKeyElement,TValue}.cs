@@ -140,17 +140,12 @@ public class SetTrie<TKeyElement,TValue>
 
             if (node.Children.TryGetValue(keyEnumerator.Current, out var childNode))
             {
-                foreach (var value in ExpandNode(childNode))
-                {
-                    yield return value;
-                }
+                node = childNode;
             }
-            else
+
+            foreach (var value in ExpandNode(node))
             {
-                foreach (var value in ExpandNode(node))
-                {
-                    yield return value;
-                }
+                yield return value;
             }
         }
     }
