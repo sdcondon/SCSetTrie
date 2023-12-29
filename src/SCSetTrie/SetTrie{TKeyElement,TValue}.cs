@@ -238,30 +238,17 @@ public class SetTrie<TKeyElement,TValue>
                 yield break;
             }
 
+            var lastKeyElement = keyElementIndex == 0 ? default : keyElements[keyElementIndex - 1];
             var currentKeyElement = keyElements[keyElementIndex];
-            var hasNextKeyElement = keyElementIndex + 1 < keyElements.Length;
-            var nextKeyElement = hasNextKeyElement ? keyElements[keyElementIndex + 1] : default;
-
             foreach (var (childKeyElement, childNode) in node.Children)
             {
-                var childComparedToCurrent = elementComparer.Compare(childKeyElement, currentKeyElement);
-                if (childComparedToCurrent > 0)
+                if (keyElementIndex == 0 || elementComparer.Compare(childKeyElement, lastKeyElement) > 0)
                 {
-                    if (hasNextKeyElement)
+                    var childComparedToCurrent = elementComparer.Compare(childKeyElement, currentKeyElement);
+                    if (childComparedToCurrent <= 0)
                     {
-                        var childComparedToNext = elementComparer.Compare(childKeyElement, nextKeyElement);
-                        if (childComparedToNext <= 0)
-                        {
-                            var keyElementIndexOffset = childComparedToNext == 0 ? 1 : 0; 
-                            foreach (var value in ExpandNode(childNode, keyElementIndex + keyElementIndexOffset))
-                            {
-                                yield return value;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        foreach (var value in ExpandNode(childNode, keyElementIndex))
+                        var keyElementIndexOffset = childComparedToCurrent == 0 ? 1 : 0; 
+                        foreach (var value in ExpandNode(childNode, keyElementIndex + keyElementIndexOffset))
                         {
                             yield return value;
                         }
