@@ -8,116 +8,76 @@ namespace SCSetTrie.Tests
     public static class SetTrieTests
     {
         public static Test GetSubsetsBehaviour => TestThat
-            .GivenEachOf(() => new LookupTestCase[]
+            .GivenEachOf(() => new LookupManyTestCase[]
             {
                 new( // Empty trie
-                    Content: new HashSet<int>[] { },
-                    Query: new() { 1 },
-                    ExpectedResults: Enumerable.Empty<HashSet<int>>()),
+                    Content: [],
+                    Query: [1],
+                    ExpectedResults: []),
 
-                new( // Smoke
-                    Content: new HashSet<int>[]
-                    {
-                        new() { },
-                        new() { 1 },
-                        new() { 1, 2 },
-                    },
-                    Query: new() { 1 },
-                    ExpectedResults: new HashSet<int>[]
-                    {
-                        new() { },
-                        new() { 1 },
-                    }),
+                new( // vanilla happy path test
+                    Content: [[], [1], [1, 2]],
+                    Query: [1],
+                    ExpectedResults: [[], [1]]),
 
                 new( // search for empty set - no match
-                    Content: new HashSet<int>[]
-                    {
-                        new() { 1 },
-                        new() { 1, 2 },
-                    },
-                    Query: new() { },
-                    ExpectedResults: new HashSet<int>[]
-                    {
-                    }),
+                    Content: [[1], [1, 2]],
+                    Query: [],
+                    ExpectedResults: []),
 
                 new( // search for empty set - with match
-                    Content: new HashSet<int>[]
-                    {
-                        new() { },
-                        new() { 1 },
-                        new() { 1, 2 },
-                    },
-                    Query: new() { },
-                    ExpectedResults: new HashSet<int>[]
-                    {
-                        new() { }
-                    }),
+                    Content: [[], [1], [1, 2]],
+                    Query: [],
+                    ExpectedResults: [[]]),
             })
             .When(tc =>
             {
-                var sut = new SetTrie<int>(tc.Content);
-                return sut.GetSubsets(tc.Query);
+                var sut = new SetTrie<int>(new SetTrieDictionaryNode<int, ISet<int>>(), tc.Content.Select(a => new HashSet<int>(a)));
+                return sut.GetSubsets(new HashSet<int>(tc.Query));
             })
             .ThenReturns((tc, rv) => rv.Should().BeEquivalentTo(tc.ExpectedResults));
 
         public static Test GetSupersetsBehaviour => TestThat
-            .GivenEachOf(() => new LookupTestCase[]
+            .GivenEachOf(() => new LookupManyTestCase[]
             {
                 new( // Empty trie
-                    Content: new HashSet<int>[] { },
-                    Query: new() { 1 },
-                    ExpectedResults: Enumerable.Empty<HashSet<int>>()),
+                    Content: [],
+                    Query: [1],
+                    ExpectedResults: []),
 
-                new( // Smoke
-                    Content: new HashSet<int>[]
-                    {
-                        new() { },
-                        new() { 1 },
-                        new() { 1, 2 },
-                    },
-                    Query: new() { 1 },
-                    ExpectedResults: new HashSet<int>[]
-                    {
-                        new() { 1 },
-                        new() { 1, 2 },
-                    }),
+                new(
+                    Content: [[], [1], [1, 2]],
+                    Query: [1],
+                    ExpectedResults: [[1], [1, 2]]),
 
                 new( // search for empty set - without exact match
-                    Content: new HashSet<int>[]
-                    {
-                        new() { 1 },
-                        new() { 1, 2 },
-                    },
-                    Query: new() { },
-                    ExpectedResults: new HashSet<int>[]
-                    {
-                        new() { 1 },
-                        new() { 1, 2 },
-                    }),
+                    Content: [[], [1], [1, 2]],
+                    Query: [],
+                    ExpectedResults: [[1], [1, 2]]),
 
                 new( // search for empty set - with exact match
-                    Content: new HashSet<int>[]
-                    {
-                        new() { },
-                        new() { 1 },
-                    },
-                    Query: new() { },
-                    ExpectedResults: new HashSet<int>[]
-                    {
-                        new() { },
-                        new() { 1 },
-                    }),
+                    Content: [[], [1]],
+                    Query: [],
+                    ExpectedResults: [[], [1]]),
             })
             .When(tc =>
             {
-                var sut = new SetTrie<int>(tc.Content);
-                return sut.GetSupersets(tc.Query);
+                var sut = new SetTrie<int>(new SetTrieDictionaryNode<int, ISet<int>>(), tc.Content.Select(a => new HashSet<int>(a)));
+                return sut.GetSupersets(new HashSet<int>(tc.Query));
             })
             .ThenReturns((tc, rv) => rv.Should().BeEquivalentTo(tc.ExpectedResults));
 
-        private record LookupTestCase(
-            IEnumerable<HashSet<int>> Content,
-            HashSet<int> Query,
-            IEnumerable<HashSet<int>> ExpectedResults);
+
+        // TODO: tests for hash code collisions
+
+        private record LookupManyTestCase(
+            IEnumerable<IEnumerable<int>> Content,
+            IEnumerable<int> Query,
+            IEnumerable<IEnumerable<int>> ExpectedResults);
+
+        private record TryLookupSingleTestCase(
+            IEnumerable<IEnumerable<int>> Content,
+            IEnumerable<int> Query,
+            bool ExpectedResult);
     }
 }
