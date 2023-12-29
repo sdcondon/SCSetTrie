@@ -119,6 +119,11 @@ public class SetTrie<TKeyElement>
         return actualTree.GetSubsets(key);
     }
 
+    /// <summary>
+    /// Returns an enumerable of teach stored superset a given set.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns>An enumerable of each stored superset the given set.</returns>
     public IEnumerable<ISet<TKeyElement>> GetSupersets(ISet<TKeyElement> key)
     {
         return actualTree.GetSupersets(key);

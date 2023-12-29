@@ -16,8 +16,7 @@ namespace SCSetTrie;
 /// <para>
 /// NB: set elements are ordered as they are added to the trie. The default ordering
 /// is by hash code - so give serious consideration to using a type that implements 
-/// value semantics for its hash code. (Allowing the specification of a comparer to
-/// use is a TODO - as is coping with collisions).
+/// value semantics for its hash code. (NB coping with collisions is a TODO for v1).
 /// </para>
 /// </summary>
 /// <typeparam name="TKeyElement">The type of each element of the stored sets.</typeparam>
@@ -183,27 +182,32 @@ public class SetTrie<TKeyElement,TValue>
     /// <returns>An enumerable of the values associated with each stored subset of the given set.</returns>
     public IEnumerable<TValue> GetSubsets(ISet<TKeyElement> key)
     {
-        using var keyEnumerator = key.OrderBy(k => k, elementComparer).GetEnumerator();
-        return ExpandNode(root);
-        
-        IEnumerable<TValue> ExpandNode(ISetTrieNode<TKeyElement, TValue> node)
-        {
-            if (node.HasValue)
-            {
-                yield return node.Value;
-            }
+        var keyElements = key.ToArray();
+        Array.Sort(keyElements, elementComparer);
 
-            if (!keyEnumerator.MoveNext())
+        return ExpandNode(root, 0);
+        
+        IEnumerable<TValue> ExpandNode(ISetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
+        {
+            if (keyElementIndex >= keyElements.Length)
             {
+                if (node.HasValue)
+                {
+                    yield return node.Value;
+                }
+
                 yield break;
             }
 
-            if (node.Children.TryGetValue(keyEnumerator.Current, out var childNode))
+            if (node.Children.TryGetValue(keyElements[keyElementIndex], out var childNode))
             {
-                node = childNode;
+                foreach (var value in ExpandNode(childNode, keyElementIndex + 1))
+                {
+                    yield return value;
+                }
             }
 
-            foreach (var value in ExpandNode(node))
+            foreach (var value in ExpandNode(node, keyElementIndex + 1))
             {
                 yield return value;
             }
@@ -217,20 +221,70 @@ public class SetTrie<TKeyElement,TValue>
     /// <returns>An enumerable of the values associated with each stored superset a given set.</returns>
     public IEnumerable<TValue> GetSupersets(ISet<TKeyElement> key)
     {
-        throw new NotImplementedException();
+        var keyElements = key.ToArray();
+        Array.Sort(keyElements, elementComparer);
 
-        ////using var keyEnumerator = key.OrderBy(k => k, elementComparer).GetEnumerator();
-        ////return ExpandNode(root);
+        return ExpandNode(root, 0);
 
-        ////IEnumerable<TValue> ExpandNode(ISetTrieNode<TKeyElement, TValue> node)
-        ////{
-        ////    if (!node.HasValue)
-        ////    {
-        ////        //TODO return values from self and all descendents
-        ////    }
+        IEnumerable<TValue> ExpandNode(ISetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
+        {
+            if (keyElementIndex >= keyElements.Length)
+            {
+                foreach (var value in GetAllDescendentValues(node))
+                {
+                    yield return value;
+                }
 
-        ////    //..
-        ////}
+                yield break;
+            }
+
+            var currentKeyElement = keyElements[keyElementIndex];
+            var hasNextKeyElement = keyElementIndex + 1 < keyElements.Length;
+            var nextKeyElement = hasNextKeyElement ? keyElements[keyElementIndex + 1] : default;
+
+            foreach (var (childKeyElement, childNode) in node.Children)
+            {
+                var childComparedToCurrent = elementComparer.Compare(childKeyElement, currentKeyElement);
+                if (childComparedToCurrent > 0)
+                {
+                    if (hasNextKeyElement)
+                    {
+                        var childComparedToNext = elementComparer.Compare(childKeyElement, nextKeyElement);
+                        if (childComparedToNext <= 0)
+                        {
+                            var keyElementIndexOffset = childComparedToNext == 0 ? 1 : 0; 
+                            foreach (var value in ExpandNode(childNode, keyElementIndex + keyElementIndexOffset))
+                            {
+                                yield return value;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var value in ExpandNode(childNode, keyElementIndex))
+                        {
+                            yield return value;
+                        }
+                    }
+                }
+            }
+        }
+
+        IEnumerable<TValue> GetAllDescendentValues(ISetTrieNode<TKeyElement, TValue> node)
+        {
+            if (node.HasValue)
+            {
+                yield return node.Value;
+            }
+
+            foreach (var childNode in node.Children.Values)
+            {
+                foreach (var value in GetAllDescendentValues(childNode))
+                {
+                    yield return value;
+                }
+            }
+        }
     }
 
     private class HashCodeComparer<T> : IComparer<T>
