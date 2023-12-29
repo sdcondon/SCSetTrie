@@ -65,7 +65,9 @@ public class SetTrie<TKeyElement,TValue>
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a new <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and some initial content.
+    /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a new 
+    /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and some initial content, that
+    /// uses hash code to determine the ordering of elements in the tree.
     /// </summary>
     /// <param name="content">The initial content to be added to the tree.</param>
     public SetTrie(IEnumerable<KeyValuePair<ISet<TKeyElement>, TValue>> content)
