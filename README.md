@@ -1,9 +1,10 @@
 ﻿# SCSetTrie
 
-A set trie implementation for .NET, allowing for fast subset and superset lookup.
+A set trie implementation for .NET.
+That is, a tree data structure for the storage of sets that is intended for fast subset and superset lookup.
 
 * Allows for storage customisation via an abstraction for tree nodes.
-  Included in the library are node implmentations that just store things in memory.
+  Included in the library are node implementations that just store things in memory.
 * Contains both synchronous and asynchronous implmentations (to allow for efficent 
   IO for node implmentations that use it). For each of those, the core implementation 
   allows the stored value to differ from the set itself, but a thin wrapper type for
