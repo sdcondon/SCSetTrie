@@ -1,6 +1,6 @@
 ﻿![SCSetTrie Icon](src/SCSetTrie-128.png)
 
-# SCFirstOrderLogic
+# SCSetTrie
 
 [![NuGet version (SCSetTrie)](https://img.shields.io/nuget/v/SCSetTrie.svg?style=flat-square)](https://www.nuget.org/packages/SCSetTrie/) 
 [![NuGet downloads (SCSetTrie)](https://img.shields.io/nuget/dt/SCSetTrie.svg?style=flat-square)](https://www.nuget.org/packages/SCSetTrie/) 
