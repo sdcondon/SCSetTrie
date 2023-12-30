@@ -2,21 +2,17 @@
 // You may use this file in accordance with the terms of the MIT license.
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SCSetTrie;
 
 /// <summary>
-/// Interface for types capable of serving as nodes of a <see cref="SetTrie{TKeyElement, TValue}"/>.
+/// Interface for types capable of serving as nodes of an <see cref="AsyncSetTrie{TKeyElement, TValue}"/>.
 /// </summary>
 /// <typeparam name="TKeyElement">The type of each element of the stored sets.</typeparam>
 /// <typeparam name="TValue">The type of the value associated with each stored set.</typeparam>
-public interface ISetTrieNode<TKeyElement, TValue>
+public interface IAsyncSetTrieNode<TKeyElement, TValue>
 {
-    /// <summary>
-    /// Gets the child nodes of this node, keyed by the element represented by the child.
-    /// </summary>
-    IReadOnlyDictionary<TKeyElement, ISetTrieNode<TKeyElement, TValue>> Children { get; }
-
     /// <summary>
     /// Gets a value indicating whether a value is stored against this node.
     /// That is, whether this node represents the "last" element of a stored set.
@@ -30,11 +26,23 @@ public interface ISetTrieNode<TKeyElement, TValue>
     TValue Value { get; }
 
     /// <summary>
+    /// Get the child nodes of this node, keyed by the element represented by the child.
+    /// </summary>
+    IAsyncEnumerable<KeyValuePair<TKeyElement, IAsyncSetTrieNode<TKeyElement, TValue>>> GetChildren();
+
+    /// <summary>
+    /// Attempts to retrieve a child node by the element it represents.
+    /// </summary>
+    /// <param name="keyElement">The element represented by the child node to retrieve.</param>
+    /// <returns>The child node, or <see langword="null"/> if no matching node was found.</returns>
+    ValueTask<IAsyncSetTrieNode<TKeyElement, TValue>?> TryGetChildAsync(TKeyElement keyElement);
+
+    /// <summary>
     /// Gets or adds a child of this node.
     /// </summary>
     /// <param name="keyElement">The element represented by the retrieved or added node.</param>
     /// <returns>The retrieved or added node.</returns>
-    ISetTrieNode<TKeyElement, TValue> GetOrAddChildNode(TKeyElement keyElement);
+    ValueTask<IAsyncSetTrieNode<TKeyElement, TValue>> GetOrAddChildAsync(TKeyElement keyElement);
 
     /// <summary>
     /// Adds a value to this node, in so doing specifying that this node represents the "last" element of a stored set.
