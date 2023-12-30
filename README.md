@@ -12,6 +12,3 @@ sets that is intended for fast retrieval of subsets and supersets of a query ter
 * Allows specification of the `IComparer<T>` to use to determine the ordering of elements in
   the tree.
 * ⚠ Is add-only, for the moment at least - no removals.
-* ⚠ Will be resolved for 1.0 - currently no protection against collisions when comparing
-  elements to determine their ordering in the tree. Is definitively a bug given that the 
-  default ordering is by hash code, and hash collisions are a fact of life.

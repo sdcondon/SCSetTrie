@@ -16,77 +16,43 @@ public class SetTrie<TKeyElement>
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SetTrie{TKeyElement}"/> class with a new 
-    /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and no initial content, that
-    /// uses hash code to determine the ordering of elements in the tree.
+    /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and no initial content.
     /// </summary>
-    public SetTrie()
-    {
-        actualTree = new();
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SetTrie{TKeyElement}"/> class with a specified
-    /// root node and no (additional) initial content, that uses hash code to determine the ordering of elements
-    /// in the tree.
-    /// </summary>
-    /// <param name="root">The root node of the tree.</param>
-    public SetTrie(ISetTrieNode<TKeyElement, ISet<TKeyElement>> root)
-    {
-        actualTree = new(root);
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SetTrie{TKeyElement}"/> class with a new 
-    /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and no initial content, that
-    /// uses a specified comparer to determine the ordering of elements in the tree.
-    /// </summary>
-    /// <param name="elementComparer">the comparer to use to determine the ordering of elements in the tree.</param>
+    /// <param name="elementComparer">
+    /// The comparer to use to determine the ordering of elements when adding to tree and performing
+    /// queries. NB: For correct behaviour, MUST define a "less than or equal" relation on the set of
+    /// elements that is "antisymmetric" - that is, the comparison can only return zero for equal elements.
+    /// </param>
     public SetTrie(IComparer<TKeyElement> elementComparer)
     {
         actualTree = new(elementComparer);
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SetTrie{TKeyElement}"/> class with a new 
-    /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and some initial content, that
-    /// uses hash code to determine the ordering of elements in the tree.
-    /// </summary>
-    /// <param name="content">The initial content to be added to the tree.</param>
-    public SetTrie(IEnumerable<ISet<TKeyElement>> content)
-    {
-        actualTree = new(content.Select(t => KeyValuePair.Create(t, t)));
-    }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="SetTrie{TKeyElement}"/> class with a 
-    /// specified root node and no (additional) initial content, that uses a specified comparer to
-    /// determine the ordering of elements in the tree.
+    /// specified root node and no (additional) initial content.
     /// </summary>
+    /// <param name="elementComparer">
+    /// The comparer to use to determine the ordering of elements when adding to tree and performing
+    /// queries. NB: For correct behaviour, MUST define a "less than or equal" relation on the set of
+    /// elements that is "antisymmetric" - that is, the comparison can only return zero for equal elements.
+    /// </param>
     /// <param name="root">The root node of the tree.</param>
-    /// <param name="elementComparer">the comparer to use to determine the ordering of elements in the tree.</param>
-    public SetTrie(ISetTrieNode<TKeyElement, ISet<TKeyElement>> root, IComparer<TKeyElement> elementComparer)
+    public SetTrie(IComparer<TKeyElement> elementComparer, ISetTrieNode<TKeyElement, ISet<TKeyElement>> root)
     {
-        actualTree = new(root, elementComparer);
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SetTrie{TKeyElement}"/> class with a 
-    /// specified root node and some (additional) initial content, that uses hash code to determine
-    /// the ordering of elements in the tree.
-    /// </summary>
-    /// <param name="root">The root node of the tree.</param>
-    /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
-    public SetTrie(ISetTrieNode<TKeyElement, ISet<TKeyElement>> root, IEnumerable<ISet<TKeyElement>> content)
-    {
-        actualTree = new(root, content.Select(t => KeyValuePair.Create(t, t)));
+        actualTree = new(elementComparer, root);
     }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SetTrie{TKeyElement}"/> class with a new 
     /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and some (additional) initial
-    /// content, that uses hash code to determine the ordering of elements in the tree.
+    /// content.
     /// </summary>
-    /// <param name="elementComparer">the comparer to use to determine the ordering of elements in the tree.</param>
+    /// <param name="elementComparer">
+    /// The comparer to use to determine the ordering of elements when adding to tree and performing
+    /// queries. NB: For correct behaviour, MUST define a "less than or equal" relation on the set of
+    /// elements that is "antisymmetric" - that is, the comparison can only return zero for equal elements.
+    /// </param>
     /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
     public SetTrie(IComparer<TKeyElement> elementComparer, IEnumerable<ISet<TKeyElement>> content)
     {
@@ -95,15 +61,18 @@ public class SetTrie<TKeyElement>
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SetTrie{TKeyElement}"/> class with a 
-    /// specified root node and some (additional) initial content, that a specified comparer to
-    /// determine the ordering of elements in the tree.
+    /// specified root node and some (additional) initial content.
     /// </summary>
+    /// <param name="elementComparer">
+    /// The comparer to use to determine the ordering of elements when adding to tree and performing
+    /// queries. NB: For correct behaviour, MUST define a "less than or equal" relation on the set of
+    /// elements that is "antisymmetric" - that is, the comparison can only return zero for equal elements.
+    /// </param>
     /// <param name="root">The root node of the tree.</param>
-    /// <param name="elementComparer">the comparer to use to determine the ordering of elements in the tree.</param>
     /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
-    public SetTrie(ISetTrieNode<TKeyElement, ISet<TKeyElement>> root, IComparer<TKeyElement> elementComparer, IEnumerable<ISet<TKeyElement>> content)
+    public SetTrie(IComparer<TKeyElement> elementComparer, ISetTrieNode<TKeyElement, ISet<TKeyElement>> root, IEnumerable<ISet<TKeyElement>> content)
     {
-        actualTree = new(root, elementComparer, content.Select(t => KeyValuePair.Create(t, t)));
+        actualTree = new(elementComparer, root, content.Select(t => KeyValuePair.Create(t, t)));
     }
 
     /// <summary>
