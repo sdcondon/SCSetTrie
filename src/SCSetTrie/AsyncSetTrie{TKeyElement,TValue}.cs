@@ -125,8 +125,7 @@ public class AsyncSetTrie<TKeyElement,TValue>
     /// Attempts to retrieve the value associated with a set.
     /// </summary>
     /// <param name="key">The set to retrieve the associated value of.</param>
-    /// <param name="value">Will be populated with the retrieved value.</param>
-    /// <returns>True if and only if a value was successfully retrieved.</returns>
+    /// <returns>A task that returns a value indicating whether it was successful, and if so what the retrieved value is.</returns>
     public async Task<(bool isSucceeded, TValue? value)> TryGetAsync(ISet<TKeyElement> key)
     {
         ArgumentNullException.ThrowIfNull(key);
@@ -157,7 +156,7 @@ public class AsyncSetTrie<TKeyElement,TValue>
     /// Returns an enumerable of the values associated with each stored subset of a given set.
     /// </summary>
     /// <param name="key"></param>
-    /// <returns>An enumerable of the values associated with each stored subset of the given set.</returns>
+    /// <returns>An async enumerable of the values associated with each stored subset of the given set.</returns>
     public IAsyncEnumerable<TValue> GetSubsets(ISet<TKeyElement> key)
     {
         ArgumentNullException.ThrowIfNull(key);
@@ -197,7 +196,7 @@ public class AsyncSetTrie<TKeyElement,TValue>
     /// Returns an enumerable of the values associated with each stored superset a given set.
     /// </summary>
     /// <param name="key"></param>
-    /// <returns>An enumerable of the values associated with each stored superset a given set.</returns>
+    /// <returns>An async enumerable of the values associated with each stored superset a given set.</returns>
     public IAsyncEnumerable<TValue> GetSupersets(ISet<TKeyElement> key)
     {
         ArgumentNullException.ThrowIfNull(key);
