@@ -77,9 +77,6 @@ namespace SCSetTrie.Tests
             })
             .ThenReturns((tc, rv) => rv.Should().BeEquivalentTo(tc.ExpectedResults));
 
-
-        // TODO: tests for comparison collisions
-
         private record LookupManyTestCase(
             IEnumerable<IEnumerable<int>> Content,
             IEnumerable<int> Query,
