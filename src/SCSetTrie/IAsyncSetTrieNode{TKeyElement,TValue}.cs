@@ -48,5 +48,5 @@ public interface IAsyncSetTrieNode<TKeyElement, TValue>
     /// Adds a value to this node, in so doing specifying that this node represents the "last" element of a stored set.
     /// </summary>
     /// <param name="value">The value to store.</param>
-    void AddValue(TValue value);
+    ValueTask AddValueAsync(TValue value);
 }

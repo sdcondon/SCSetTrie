@@ -66,7 +66,7 @@ public class AsyncSetTrieDictionaryNode<TKeyElement, TValue> : IAsyncSetTrieNode
     }
 
     /// <inheritdoc/>
-    public void AddValue(TValue value)
+    public ValueTask AddValueAsync(TValue value)
     {
         if (HasValue)
         {
@@ -75,5 +75,6 @@ public class AsyncSetTrieDictionaryNode<TKeyElement, TValue> : IAsyncSetTrieNode
 
         this.value = value;
         HasValue = true;
+        return ValueTask.CompletedTask;
     }
 }

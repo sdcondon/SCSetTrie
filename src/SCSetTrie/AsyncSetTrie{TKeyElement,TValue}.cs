@@ -118,7 +118,7 @@ public class AsyncSetTrie<TKeyElement,TValue>
             currentNode = await currentNode.GetOrAddChildAsync(keyElement);
         }
 
-        currentNode.AddValue(value);
+        await currentNode.AddValueAsync(value);
     }
 
     /// <summary>
