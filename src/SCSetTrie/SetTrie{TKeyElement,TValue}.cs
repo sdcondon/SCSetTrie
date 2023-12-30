@@ -24,6 +24,17 @@ public class SetTrie<TKeyElement,TValue>
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a new 
+    /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and no initial content, that
+    /// uses a new <see cref="CollisionResolvingHashCodeComparer{T}"/> to determine the ordering of
+    /// elements in the tree.
+    /// </summary>
+    public SetTrie()
+        : this(new CollisionResolvingHashCodeComparer<TKeyElement>(), new SetTrieDictionaryNode<TKeyElement, TValue>(), EmptyElements)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a new 
     /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and no initial content.
     /// </summary>
     /// <param name="elementComparer">
@@ -33,6 +44,29 @@ public class SetTrie<TKeyElement,TValue>
     /// </param>
     public SetTrie(IComparer<TKeyElement> elementComparer)
         : this(elementComparer, new SetTrieDictionaryNode<TKeyElement, TValue>(), EmptyElements)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a specified
+    /// root node and no (additional) initial content, that uses a new <see cref="CollisionResolvingHashCodeComparer{T}"/>
+    /// to determine the ordering of elements in the tree.
+    /// </summary>
+    /// <param name="root">The root node of the tree.</param>
+    public SetTrie(ISetTrieNode<TKeyElement, TValue> root)
+        : this(new CollisionResolvingHashCodeComparer<TKeyElement>(), root, EmptyElements)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a new 
+    /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and some initial content, that
+    /// uses a new <see cref="CollisionResolvingHashCodeComparer{T}"/> to determine the ordering of
+    /// elements in the tree.
+    /// </summary>
+    /// <param name="content">The initial content to be added to the tree.</param>
+    public SetTrie(IEnumerable<KeyValuePair<ISet<TKeyElement>, TValue>> content)
+        : this(new CollisionResolvingHashCodeComparer<TKeyElement>(), new SetTrieDictionaryNode<TKeyElement, TValue>(), content)
     {
     }
 
@@ -48,6 +82,19 @@ public class SetTrie<TKeyElement,TValue>
     /// <param name="root">The root node of the tree.</param>
     public SetTrie(IComparer<TKeyElement> elementComparer, ISetTrieNode<TKeyElement, TValue> root)
         : this(elementComparer, root, EmptyElements)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a 
+    /// specified root node and some (additional) initial content, that uses a new 
+    /// <see cref="CollisionResolvingHashCodeComparer{T}"/> to determine the ordering of elements
+    /// in the tree.
+    /// </summary>
+    /// <param name="root">The root node of the tree.</param>
+    /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
+    public SetTrie(ISetTrieNode<TKeyElement, TValue> root, IEnumerable<KeyValuePair<ISet<TKeyElement>, TValue>> content)
+        : this(new CollisionResolvingHashCodeComparer<TKeyElement>(), root, content)
     {
     }
 
@@ -103,7 +150,7 @@ public class SetTrie<TKeyElement,TValue>
         ArgumentNullException.ThrowIfNull(key);
 
         var currentNode = root;
-        foreach (var keyElement in key.OrderBy(k => k, elementComparer))
+        foreach (var keyElement in SortKeyElements(key))
         {
             currentNode = currentNode.GetOrAddChildNode(keyElement);
         }
@@ -122,7 +169,7 @@ public class SetTrie<TKeyElement,TValue>
         ArgumentNullException.ThrowIfNull(key);
 
         var currentNode = root;
-        foreach (var keyElement in key.OrderBy(k => k, elementComparer))
+        foreach (var keyElement in SortKeyElements(key))
         {
             if (currentNode.Children.TryGetValue(keyElement, out var childNode))
             {
@@ -154,9 +201,7 @@ public class SetTrie<TKeyElement,TValue>
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        var keyElements = key.ToArray();
-        Array.Sort(keyElements, elementComparer);
-
+        var keyElements = SortKeyElements(key);
         return ExpandNode(root, 0);
         
         IEnumerable<TValue> ExpandNode(ISetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
@@ -195,11 +240,8 @@ public class SetTrie<TKeyElement,TValue>
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        var keyElements = key.ToArray();
-        Array.Sort(keyElements, elementComparer);
-
+        var keyElements = SortKeyElements(key);
         return ExpandNode(root, 0);
-
         IEnumerable<TValue> ExpandNode(ISetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
         {
             if (keyElementIndex >= keyElements.Length)
@@ -246,5 +288,14 @@ public class SetTrie<TKeyElement,TValue>
                 }
             }
         }
+    }
+
+    private TKeyElement[] SortKeyElements(IEnumerable<TKeyElement> key)
+    {
+        var keyElements = key.ToArray();
+        Array.Sort(keyElements, elementComparer);
+        // TODO: Debug.Assert no comparisons of zero.
+
+        return keyElements;
     }
 }
