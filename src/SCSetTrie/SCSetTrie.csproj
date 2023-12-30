@@ -3,6 +3,32 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>A few trie implementations for the storage of sets, facilitating fast retrieval of subsets and supersets of a query term.</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>set trie subsets supersets</PackageTags>
+    <Product>SCSetTrie</Product>
+    <PackageId>SCSetTrie</PackageId>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>SCSetTrie-128.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="_PackageFiles\SCSetTrie.md" Pack="true" PackagePath="README.md" />
+    <None Include="..\SCSetTrie-128.png" Pack="true" PackagePath="\" Link="_PackageFiles\SCSetTrie-128.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="SauceControl.InheritDoc" Version="2.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
 </Project>

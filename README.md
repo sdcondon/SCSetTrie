@@ -1,14 +1,30 @@
-﻿# SCSetTrie
+﻿![SCSetTrie Icon](src/SCSetTrie-128.png)
 
-A few set trie implementations for .NET. That is, data structures for the storage of
-sets that is intended for fast retrieval of subsets and supersets of a query term.
+# SCFirstOrderLogic
 
-* Allows for storage customisation via an abstraction for tree nodes.
-  Included in the library are node implementations that just store things in memory.
-* Contains both synchronous and asynchronous implementations (to allow for efficent 
-  IO for node implmentations that use it). For each of those, the core implementation 
-  allows the stored value to differ from the set itself, but a thin wrapper type for
-  which the stored value is just the set itself is also provided.
-* Allows specification of the `IComparer<T>` to use to determine the ordering of elements in
-  the tree.
-* ⚠ Is add-only, for the moment at least - no removals.
+[![NuGet version (SCSetTrie)](https://img.shields.io/nuget/v/SCSetTrie.svg?style=flat-square)](https://www.nuget.org/packages/SCSetTrie/) 
+[![NuGet downloads (SCSetTrie)](https://img.shields.io/nuget/dt/SCSetTrie.svg?style=flat-square)](https://www.nuget.org/packages/SCSetTrie/) 
+[![Commits since latest release](https://img.shields.io/github/commits-since/sdcondon/SCSetTrie/latest?style=flat-square)](https://github.com/sdcondon/SCSetTrie/compare/1.0.0...main)
+
+This repository contains the source code for the SCSetTrie NuGet package - along with its tests, performance benchmarks, and documentation website.
+
+## Package Documentation
+
+For documentation of the package itself, see https://sdcondon.net/SCSetTrie/.
+
+## Source Documentation
+
+I have not written up any documentation of the source (e.g. repo summary, design discussion, build guidance) - and likely won't unless someone else expresses an interest in contributing.
+Once cloned, it should "just work" as far as compilation is concerned.
+
+## Issues and Contributions
+
+I'm not really expecting anyone to want to get involved, but please feel free to do so.
+I do keep an eye on the [issues](https://github.com/sdcondon/SCSetTrie/issues) tab, and will add a CONTRIBUTING.md if anyone drops me a message expressing interest.
+Do bear in mind that I'll probably consider it "done" once removal is implemented, though.
+
+## See Also
+
+You might also be interested in:
+
+* [My GitHub Profile](https://github.com/sdcondon): My profile README lists several of my more interesting public projects.
