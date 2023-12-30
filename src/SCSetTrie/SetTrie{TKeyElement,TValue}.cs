@@ -86,19 +86,6 @@ public class SetTrie<TKeyElement,TValue>
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a 
-    /// specified root node and some (additional) initial content, that uses a new 
-    /// <see cref="CollisionResolvingHashCodeComparer{T}"/> to determine the ordering of elements
-    /// in the tree.
-    /// </summary>
-    /// <param name="root">The root node of the tree.</param>
-    /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
-    public SetTrie(ISetTrieNode<TKeyElement, TValue> root, IEnumerable<KeyValuePair<ISet<TKeyElement>, TValue>> content)
-        : this(new CollisionResolvingHashCodeComparer<TKeyElement>(), root, content)
-    {
-    }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a new 
     /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and some (additional) initial
     /// content.
@@ -111,6 +98,19 @@ public class SetTrie<TKeyElement,TValue>
     /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
     public SetTrie(IComparer<TKeyElement> elementComparer, IEnumerable<KeyValuePair<ISet<TKeyElement>, TValue>> content)
         : this(elementComparer, new SetTrieDictionaryNode<TKeyElement, TValue>(), content)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a 
+    /// specified root node and some (additional) initial content, that uses a new 
+    /// <see cref="CollisionResolvingHashCodeComparer{T}"/> to determine the ordering of elements
+    /// in the tree.
+    /// </summary>
+    /// <param name="root">The root node of the tree.</param>
+    /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
+    public SetTrie(ISetTrieNode<TKeyElement, TValue> root, IEnumerable<KeyValuePair<ISet<TKeyElement>, TValue>> content)
+        : this(new CollisionResolvingHashCodeComparer<TKeyElement>(), root, content)
     {
     }
 

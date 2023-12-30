@@ -9,9 +9,9 @@ namespace SCSetTrie;
 /// have colliding hash codes. This results in a comparer that defines a "less than
 /// or equal" relation that is antisymmetric - and is thus usable by set tries for
 /// element comparison. It is however important to note that these arbitrary decisions
-/// will not be the same across runs. As such, this type should NOT be used when 
-/// the "same" trie is used across runs - that is, when any kind of persistence is
-/// involved.
+/// will not be the same across runs (or even across instances). As such, this type
+/// should NOT be used when the "same" trie is used across runs - that is, when any
+/// kind of persistence is involved.
 /// </summary>
 public class CollisionResolvingHashCodeComparer<T> : IComparer<T>
     where T : notnull
