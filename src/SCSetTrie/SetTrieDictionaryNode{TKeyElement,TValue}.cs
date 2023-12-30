@@ -14,6 +14,11 @@ namespace SCSetTrie;
 public class SetTrieDictionaryNode<TKeyElement, TValue> : ISetTrieNode<TKeyElement, TValue>
     where TKeyElement : notnull
 {
+    // TODO: For correct (or at least consistent) behaviour, the equality comparer used
+    // by this dictionary should really be closely tied to the IComparer used by the trie (i.e.
+    // equality in this dictionary should be exactly equivalent to the comparer returning 0).
+    // How to achieve this, without overwhelming code smells? Can of course add ctor parameters
+    // to this class, but what exactly should be added?
     private readonly Dictionary<TKeyElement, ISetTrieNode<TKeyElement, TValue>> children = new();
     private TValue? value;
 
@@ -43,7 +48,11 @@ public class SetTrieDictionaryNode<TKeyElement, TValue> : ISetTrieNode<TKeyEleme
     /// <inheritdoc/>
     public void AddValue(TValue value)
     {
-        // TODO: throw if already present
+        if (HasValue)
+        {
+            throw new InvalidOperationException("A value is already stored against this node");
+        }
+
         this.value = value;
         HasValue = true;
     }

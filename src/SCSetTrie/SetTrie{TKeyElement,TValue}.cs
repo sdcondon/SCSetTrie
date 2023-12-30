@@ -100,6 +100,8 @@ public class SetTrie<TKeyElement,TValue>
     /// <param name="value">The value to associate with the set.</param>
     public void Add(ISet<TKeyElement> key, TValue value)
     {
+        ArgumentNullException.ThrowIfNull(key);
+
         var currentNode = root;
         foreach (var keyElement in key.OrderBy(k => k, elementComparer))
         {
@@ -117,6 +119,8 @@ public class SetTrie<TKeyElement,TValue>
     /// <returns>True if and only if a value was successfully retrieved.</returns>
     public bool TryGet(ISet<TKeyElement> key, [MaybeNullWhen(false)] out TValue value)
     {
+        ArgumentNullException.ThrowIfNull(key);
+
         var currentNode = root;
         foreach (var keyElement in key.OrderBy(k => k, elementComparer))
         {
@@ -148,6 +152,8 @@ public class SetTrie<TKeyElement,TValue>
     /// <returns>An enumerable of the values associated with each stored subset of the given set.</returns>
     public IEnumerable<TValue> GetSubsets(ISet<TKeyElement> key)
     {
+        ArgumentNullException.ThrowIfNull(key);
+
         var keyElements = key.ToArray();
         Array.Sort(keyElements, elementComparer);
 
@@ -187,6 +193,8 @@ public class SetTrie<TKeyElement,TValue>
     /// <returns>An enumerable of the values associated with each stored superset a given set.</returns>
     public IEnumerable<TValue> GetSupersets(ISet<TKeyElement> key)
     {
+        ArgumentNullException.ThrowIfNull(key);
+
         var keyElements = key.ToArray();
         Array.Sort(keyElements, elementComparer);
 
