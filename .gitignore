@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Documentation client-side libs
+/src/SCSetTrie.Documentation/wwwroot/lib/
+
 # User-specific files
 *.rsuser
 *.suo
