@@ -34,7 +34,7 @@ setTrie.Add(new HashSet<int>([1, 2, 3]));
 // subsets will yield [] and [1]:
 IEnumerable<ISet<int>> subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
 
-// supersets will yield [3], and [1, 2, 3]:
+// supersets will yield [3] and [1, 2, 3]:
 IEnumerable<ISet<int>> supersets = setTrie.GetSupersets(new HashSet<int>([3]));
 ```
 
@@ -55,7 +55,7 @@ setTrie.Add(new HashSet<int>([1, 2, 3]), "1-3");
 // subsets will yield "∅" and "1":
 IEnumerable<string> subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
 
-// supersets will yield "3", and "1-3":
+// supersets will yield "3" and "1-3":
 IEnumerable<string> supersets = setTrie.GetSupersets(new HashSet<int>([3]));
 ```
 
@@ -90,7 +90,7 @@ await setTrie.AddAsync(new HashSet<int>([1, 2, 3]));
 // subsets yield [] and [1]:
 IAsyncEnumerable<ISet<int>> subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
 
-// supersets will yield [3], and [1, 2, 3]:
+// supersets will yield [3] and [1, 2, 3]:
 IAsyncEnumerable<ISet<int>> supersets = setTrie.GetSupersets(new HashSet<int>([3]));
 ```
 
@@ -109,6 +109,6 @@ await setTrie.AddAsync(new HashSet<int>([1, 2, 3]), "1-3");
 // subsets will yield "∅" and "1":
 IAsyncEnumerable<string> subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
 
-// supersets will yield "3", and "1-3":
+// supersets will yield "3" and "1-3":
 IAsyncEnumerable<string> supersets = setTrie.GetSupersets(new HashSet<int>([3]));
 ```
