@@ -21,6 +21,10 @@ namespace SCSetTrie;
 /// </summary>
 /// <typeparam name="TKeyElement">The type of each element of the stored sets.</typeparam>
 /// <typeparam name="TValue">The type of the value associated with each stored set.</typeparam>
+// TODO: Should we be using Comparer<T>.Default instead of CollisionResolving.. when TKeyElement
+// is IComparable? Haven't done so so far because I'm paranoid about default comparisons not being
+// antisymmetric - but I'm thinking it might actually be a safe bet? Not a big deal because
+// its trivial for consumers to just pass Comparer<T>.Default when appropriate.
 public class AsyncSetTrie<TKeyElement,TValue>
     where TKeyElement : notnull
 {
