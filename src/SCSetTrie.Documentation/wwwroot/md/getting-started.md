@@ -33,7 +33,7 @@ setTrie.Add(new HashSet<int>([1, 2, 3]));
 // subsets will be an IEnumerable<ISet<int>> that yields [] and [1]:
 var subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
 
-// supersets will be an IEnumerable<ISet<int>> that yileds [3], and [1, 2, 3]:
+// supersets will be an IEnumerable<ISet<int>> that yields [3], and [1, 2, 3]:
 var supersets = setTrie.GetSupersets(new HashSet<int>([3]));
 ```
 
@@ -79,7 +79,7 @@ Where the value to return is the stored set itself:
 ```
 using SCSetTrie;
 
-var setTrie = new AsyncSetTrie<int>();
+var setTrie = new AsyncSetTrie<int>(Comparer<int>.Default);
 
 await setTrie.AddAsync(new HashSet<int>([]));
 await setTrie.AddAsync(new HashSet<int>([1]));
@@ -89,14 +89,14 @@ await setTrie.AddAsync(new HashSet<int>([1, 2, 3]));
 // subsets will be an IAsyncEnumerable<ISet<int>> that yields [] and [1]:
 var subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
 
-// supersets will be an IAsyncEnumerable<ISet<int>> that yileds [3], and [1, 2, 3]:
+// supersets will be an IAsyncEnumerable<ISet<int>> that yields [3], and [1, 2, 3]:
 var supersets = setTrie.GetSupersets(new HashSet<int>([3]));
 ```
 
 ```
 using SCSetTrie;
 
-var setTrie = new AsyncSetTrie<int, string>();
+var setTrie = new AsyncSetTrie<int, string>(Comparer<int>.Default);
 
 await setTrie.AddAsync(new HashSet<int>([]), "∅");
 await setTrie.AddAsync(new HashSet<int>([1]), "1");
