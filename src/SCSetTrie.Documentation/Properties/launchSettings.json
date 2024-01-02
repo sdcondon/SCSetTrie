@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "SCFirstOrderLogic.Documentation": {
+    "SCSetTrie.Documentation": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
