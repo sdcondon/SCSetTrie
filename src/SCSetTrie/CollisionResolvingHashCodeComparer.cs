@@ -44,8 +44,7 @@ public class CollisionResolvingHashCodeComparer<T> : IComparer<T>
     /// <summary>
     /// Gets the resolutions that the comparer has made to hash code collisions.
     /// Encountered distinct object pairs with colliding hash codes are present as keys.
-    /// The associated value is the arbitrarily decided upon comparison of the two
-    /// objects.
+    /// The associated value is the arbitrarily decided upon comparison of the two objects.
     /// </summary>
     public IReadOnlyDictionary<(T, T), int> CollisionResolutions { get; }
   

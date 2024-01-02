@@ -134,7 +134,7 @@ public class SetTrie<TKeyElement>
     /// <summary>
     /// Returns an enumerable of each stored subset of a given set.
     /// </summary>
-    /// <param name="key"></param>
+    /// <param name="key">The stored subsets of this set will be retrieved.</param>
     /// <returns>An enumerable each stored subset of the given set.</returns>
     public IEnumerable<ISet<TKeyElement>> GetSubsets(ISet<TKeyElement> key)
     {
@@ -144,7 +144,7 @@ public class SetTrie<TKeyElement>
     /// <summary>
     /// Returns an enumerable of teach stored superset a given set.
     /// </summary>
-    /// <param name="key"></param>
+    /// <param name="key">The stored supersets of this set will be retrieved.</param>
     /// <returns>An enumerable of each stored superset the given set.</returns>
     public IEnumerable<ISet<TKeyElement>> GetSupersets(ISet<TKeyElement> key)
     {

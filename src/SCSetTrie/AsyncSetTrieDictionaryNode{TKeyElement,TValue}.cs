@@ -10,7 +10,8 @@ namespace SCSetTrie;
 #pragma warning disable CS1998 // async lacks await. See 'NB' in class summary.
 /// <summary>
 /// <para>
-/// An implementation of <see cref="IAsyncSetTrieNode{TKeyElement, TValue}"/> that just stores its content using an in-memory dictionary.
+/// An implementation of <see cref="IAsyncSetTrieNode{TKeyElement, TValue}"/> that just stores its content in memory.
+/// Uses a <see cref="ConcurrentDictionary{TKey, TValue}"/> for child nodes.
 /// </para>
 /// <para>
 /// NB: If you are using this type, you should consider just using <see cref="SetTrie{TKeyElement, TValue}"/> to avoid the overhead of asynchronicity.
@@ -23,13 +24,29 @@ namespace SCSetTrie;
 public class AsyncSetTrieDictionaryNode<TKeyElement, TValue> : IAsyncSetTrieNode<TKeyElement, TValue>
     where TKeyElement : notnull
 {
-    // TODO: For correct (or at least consistent) behaviour, the equality comparer used
-    // by this dictionary should really be closely tied to the IComparer used by the trie (i.e.
-    // equality in this dictionary should be exactly equivalent to the comparer returning 0).
-    // How to achieve this, without overwhelming code smells? Can of course add ctor parameters
-    // to this class, but what exactly should be added?
-    private readonly ConcurrentDictionary<TKeyElement, IAsyncSetTrieNode<TKeyElement, TValue>> children = new();
+    private readonly ConcurrentDictionary<TKeyElement, IAsyncSetTrieNode<TKeyElement, TValue>> children;
     private TValue? value;
+
+    /// <summary>
+    /// Initialises a new instance of the <see cref="AsyncSetTrieDictionaryNode{TKeyElement, TValue}"/> class.
+    /// </summary>
+    public AsyncSetTrieDictionaryNode()
+        : this(EqualityComparer<TKeyElement>.Default)
+    {
+    }
+
+    /// <summary>
+    /// Initialises a new instance of the <see cref="AsyncSetTrieDictionaryNode{TKeyElement, TValue}"/> class.
+    /// </summary>
+    /// <param name="equalityComparer">
+    /// The equality comparer that should be used by the child dictionary.
+    /// For correct behaviour, trie instances accessing this node should be using an <see cref="IComparer{T}"/> that is consistent with it. 
+    /// That is, one that only returns zero for elements considered equal by equality comparer used by this instance.
+    /// </param>
+    public AsyncSetTrieDictionaryNode(IEqualityComparer<TKeyElement> equalityComparer)
+    {
+        children = new(equalityComparer);
+    }
 
     /// <inheritdoc/>
     public bool HasValue { get; private set; }

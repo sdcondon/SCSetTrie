@@ -86,14 +86,14 @@ public class AsyncSetTrie<TKeyElement>
     /// <summary>
     /// Returns an enumerable of each stored subset of a given set.
     /// </summary>
-    /// <param name="key"></param>
+    /// <param name="key">The stored subsets of this set will be retrieved.</param>
     /// <returns>An async enumerable each stored subset of the given set.</returns>
     public IAsyncEnumerable<ISet<TKeyElement>> GetSubsets(ISet<TKeyElement> key) => actualTree.GetSubsets(key);
 
     /// <summary>
     /// Returns an enumerable of teach stored superset a given set.
     /// </summary>
-    /// <param name="key"></param>
+    /// <param name="key">The stored supersets of this set will be retrieved.</param>
     /// <returns>An async enumerable of each stored superset the given set.</returns>
     public IAsyncEnumerable<ISet<TKeyElement>> GetSupersets(ISet<TKeyElement> key) => actualTree.GetSupersets(key);
 }

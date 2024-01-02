@@ -8,23 +8,12 @@ using System.Threading.Tasks;
 namespace SCSetTrie;
 
 /// <summary>
-/// <para>
 /// A set trie implementation, for the storage of sets (with associated values) in a
 /// manner facilitating fast lookup of (values associated with) subsets and supersets
 /// of a query set.
-/// </para>
-/// <para>
-/// NB: set elements are ordered as they are added to the trie. The default ordering
-/// is by hash code - so give serious consideration to using a type that implements 
-/// value semantics for its hash code. (NB coping with collisions is a TODO for v1).
-/// </para>
 /// </summary>
 /// <typeparam name="TKeyElement">The type of each element of the stored sets.</typeparam>
 /// <typeparam name="TValue">The type of the value associated with each stored set.</typeparam>
-// TODO: Should we be using Comparer<T>.Default instead of CollisionResolving.. when TKeyElement
-// is IComparable? Haven't done so so far because I'm paranoid about default comparisons not being
-// antisymmetric - but I'm thinking it might actually be a safe bet? Not a big deal because
-// its trivial for consumers to just pass Comparer<T>.Default when appropriate.
 public class AsyncSetTrie<TKeyElement,TValue>
     where TKeyElement : notnull
 {
@@ -40,7 +29,7 @@ public class AsyncSetTrie<TKeyElement,TValue>
     /// </summary>
     /// <param name="elementComparer">
     /// The comparer to use to determine the ordering of elements when adding to tree and performing
-    /// queries. NB: For correct behaviour, MUST define a "less than or equal" relation on the set of
+    /// queries. NB: For correct behaviour, it MUST define a "less than or equal" relation on the set of
     /// elements that is "antisymmetric" - that is, the comparison can only return zero for equal elements.
     /// </param>
     public AsyncSetTrie(IComparer<TKeyElement> elementComparer)
@@ -117,7 +106,7 @@ public class AsyncSetTrie<TKeyElement,TValue>
         ArgumentNullException.ThrowIfNull(key);
 
         var currentNode = root;
-        foreach (var keyElement in SortKeyElements(key))
+        foreach (var keyElement in elementComparer.Sort(key))
         {
             currentNode = await currentNode.GetOrAddChildAsync(keyElement);
         }
@@ -135,7 +124,7 @@ public class AsyncSetTrie<TKeyElement,TValue>
         ArgumentNullException.ThrowIfNull(key);
 
         var currentNode = root;
-        foreach (var keyElement in SortKeyElements(key))
+        foreach (var keyElement in elementComparer.Sort(key))
         {
             var childNode = await currentNode.TryGetChildAsync(keyElement);
             if (childNode != null)
@@ -159,13 +148,13 @@ public class AsyncSetTrie<TKeyElement,TValue>
     /// <summary>
     /// Returns an enumerable of the values associated with each stored subset of a given set.
     /// </summary>
-    /// <param name="key"></param>
+    /// <param name="key">The values associated with the stored subsets of this set will be retrieved.</param>
     /// <returns>An async enumerable of the values associated with each stored subset of the given set.</returns>
     public IAsyncEnumerable<TValue> GetSubsets(ISet<TKeyElement> key)
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        var keyElements = SortKeyElements(key);
+        var keyElements = elementComparer.Sort(key);
         return ExpandNode(root, 0);
         
         async IAsyncEnumerable<TValue> ExpandNode(IAsyncSetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
@@ -199,13 +188,13 @@ public class AsyncSetTrie<TKeyElement,TValue>
     /// <summary>
     /// Returns an enumerable of the values associated with each stored superset a given set.
     /// </summary>
-    /// <param name="key"></param>
+    /// <param name="key">The values associated with the stored supersets of this set will be retrieved.</param>
     /// <returns>An async enumerable of the values associated with each stored superset a given set.</returns>
     public IAsyncEnumerable<TValue> GetSupersets(ISet<TKeyElement> key)
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        var keyElements = SortKeyElements(key);
+        var keyElements = elementComparer.Sort(key);
         return ExpandNode(root, 0);
 
         async IAsyncEnumerable<TValue> ExpandNode(IAsyncSetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
@@ -220,13 +209,11 @@ public class AsyncSetTrie<TKeyElement,TValue>
                 yield break;
             }
 
-            var lastKeyElement = keyElementIndex == 0 ? default : keyElements[keyElementIndex - 1];
-            var currentKeyElement = keyElements[keyElementIndex];
             await foreach (var (childKeyElement, childNode) in node.GetChildren())
             {
-                if (keyElementIndex == 0 || elementComparer.Compare(childKeyElement, lastKeyElement) > 0)
+                if (keyElementIndex == 0 || elementComparer.Compare(childKeyElement, keyElements[keyElementIndex - 1]) > 0)
                 {
-                    var childComparedToCurrent = elementComparer.Compare(childKeyElement, currentKeyElement);
+                    var childComparedToCurrent = elementComparer.Compare(childKeyElement, keyElements[keyElementIndex]);
                     if (childComparedToCurrent <= 0)
                     {
                         var keyElementIndexOffset = childComparedToCurrent == 0 ? 1 : 0; 
@@ -254,14 +241,5 @@ public class AsyncSetTrie<TKeyElement,TValue>
                 }
             }
         }
-    }
-
-    private TKeyElement[] SortKeyElements(IEnumerable<TKeyElement> key)
-    {
-        var keyElements = key.ToArray();
-        Array.Sort(keyElements, elementComparer);
-        // TODO: Debug.Assert no comparisons of zero.
-
-        return keyElements;
     }
 }

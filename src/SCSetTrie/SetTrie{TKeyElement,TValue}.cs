@@ -39,7 +39,7 @@ public class SetTrie<TKeyElement,TValue>
     /// </summary>
     /// <param name="elementComparer">
     /// The comparer to use to determine the ordering of elements when adding to tree and performing
-    /// queries. NB: For correct behaviour, MUST define a "less than or equal" relation on the set of
+    /// queries. NB: For correct behaviour, it MUST define a "less than or equal" relation on the set of
     /// elements that is "antisymmetric" - that is, the comparison can only return zero for equal elements.
     /// </param>
     public SetTrie(IComparer<TKeyElement> elementComparer)
@@ -150,7 +150,7 @@ public class SetTrie<TKeyElement,TValue>
         ArgumentNullException.ThrowIfNull(key);
 
         var currentNode = root;
-        foreach (var keyElement in SortKeyElements(key))
+        foreach (var keyElement in elementComparer.Sort(key))
         {
             currentNode = currentNode.GetOrAddChildNode(keyElement);
         }
@@ -159,7 +159,7 @@ public class SetTrie<TKeyElement,TValue>
     }
 
     /// <summary>
-    /// Attempts to retrieve the value associated with a set.
+    /// Attempts to retrieve the value associated with a set, matched exactly.
     /// </summary>
     /// <param name="key">The set to retrieve the associated value of.</param>
     /// <param name="value">Will be populated with the retrieved value.</param>
@@ -169,7 +169,7 @@ public class SetTrie<TKeyElement,TValue>
         ArgumentNullException.ThrowIfNull(key);
 
         var currentNode = root;
-        foreach (var keyElement in SortKeyElements(key))
+        foreach (var keyElement in elementComparer.Sort(key))
         {
             if (currentNode.Children.TryGetValue(keyElement, out var childNode))
             {
@@ -193,15 +193,15 @@ public class SetTrie<TKeyElement,TValue>
     }
 
     /// <summary>
-    /// Returns an enumerable of the values associated with each stored subset of a given set.
+    /// Retrieves the values associated with each stored subset of a given set.
     /// </summary>
-    /// <param name="key"></param>
+    /// <param name="key">The values associated with the stored subsets of this set will be retrieved.</param>
     /// <returns>An enumerable of the values associated with each stored subset of the given set.</returns>
     public IEnumerable<TValue> GetSubsets(ISet<TKeyElement> key)
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        var keyElements = SortKeyElements(key);
+        var keyElements = elementComparer.Sort(key);
         return ExpandNode(root, 0);
         
         IEnumerable<TValue> ExpandNode(ISetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
@@ -232,16 +232,17 @@ public class SetTrie<TKeyElement,TValue>
     }
 
     /// <summary>
-    /// Returns an enumerable of the values associated with each stored superset a given set.
+    /// Rerrieves the values associated with each stored superset a given set.
     /// </summary>
-    /// <param name="key"></param>
-    /// <returns>An enumerable of the values associated with each stored superset a given set.</returns>
+    /// <param name="key">The values associated with the stored supersets of this set will be retrieved.</param>
+    /// <returns>An enumerable of the values associated with each stored superset the given set.</returns>
     public IEnumerable<TValue> GetSupersets(ISet<TKeyElement> key)
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        var keyElements = SortKeyElements(key);
+        var keyElements = elementComparer.Sort(key);
         return ExpandNode(root, 0);
+
         IEnumerable<TValue> ExpandNode(ISetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
         {
             if (keyElementIndex >= keyElements.Length)
@@ -254,13 +255,11 @@ public class SetTrie<TKeyElement,TValue>
                 yield break;
             }
 
-            var lastKeyElement = keyElementIndex == 0 ? default : keyElements[keyElementIndex - 1];
-            var currentKeyElement = keyElements[keyElementIndex];
             foreach (var (childKeyElement, childNode) in node.Children)
             {
-                if (keyElementIndex == 0 || elementComparer.Compare(childKeyElement, lastKeyElement) > 0)
+                if (keyElementIndex == 0 || elementComparer.Compare(childKeyElement, keyElements[keyElementIndex - 1]) > 0)
                 {
-                    var childComparedToCurrent = elementComparer.Compare(childKeyElement, currentKeyElement);
+                    var childComparedToCurrent = elementComparer.Compare(childKeyElement, keyElements[keyElementIndex]);
                     if (childComparedToCurrent <= 0)
                     {
                         var keyElementIndexOffset = childComparedToCurrent == 0 ? 1 : 0; 
@@ -288,14 +287,5 @@ public class SetTrie<TKeyElement,TValue>
                 }
             }
         }
-    }
-
-    private TKeyElement[] SortKeyElements(IEnumerable<TKeyElement> key)
-    {
-        var keyElements = key.ToArray();
-        Array.Sort(keyElements, elementComparer);
-        // TODO: Debug.Assert no comparisons of zero.
-
-        return keyElements;
     }
 }
