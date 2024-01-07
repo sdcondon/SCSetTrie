@@ -38,7 +38,9 @@ namespace SCSetTrie
         }
 
         // Probably ultimately want to allow working with IEnumerable<T>.
-        // But in that case probably want to check (and not just in Debug) that there aren't duplicates:
+        // But in that case probably want to check (and not just in Debug) that there aren't duplicates.
+        // Or do we always check, even with set types, to verify comparer isn't innappropriate? Have to
+        // sort anyway, so not much of an extra load to check adjacent pairs as we do so?
         ////public static T[] SortAndValidate<T>(this IComparer<T> comparer, IEnumerable<T> key)
         ////{
         ////    var keyElements = key.ToArray();
