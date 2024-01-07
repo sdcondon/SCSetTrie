@@ -73,11 +73,11 @@ There are only a few things to note:
 
 * `Add` becomes `AddAsync` and returns a `Task`.
 * `GetSubsets` and `GetSupersets` return `IAsyncEnumerable<TValue>`
-* The comparer constructor parameter is not optional. This is because the
+* The comparer constructor parameter is not optional. This is because of the
   unsuitability of default comparer for anything involving persistence -
-  the "arbitrary but consistent decision" it makes when collisions occur
-  will not necessarily be the same across runs.
-* The default root node is a new implmentation of a type that just stores 
+  the "arbitrary but consistent decision" it makes when collisions occur will
+  not necessarily be the same across runs.
+* The default root node is a new implementation of a type that just stores 
   things in memory. Again, this trie implementation is really intended for
   custom node implementations, but there's no actual problem with just keeping
   stuff in memory, so this default remains.
