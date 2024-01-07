@@ -46,6 +46,9 @@ public class CollisionResolvingHashCodeComparer<T> : IComparer<T>
     /// Encountered distinct object pairs with colliding hash codes are present as keys.
     /// The associated value is the arbitrarily decided upon comparison of the two objects.
     /// </summary>
+    // TODO: not sure why ive bothered making this public, given that ive not also allowed
+    // it to be set on instantiation (so doesn't help anyone wanting to serialise this
+    // alongside a trie instance).
     public IReadOnlyDictionary<(T, T), int> CollisionResolutions { get; }
   
     #pragma warning disable CS8767 // This is fine - T has notnull constraint
