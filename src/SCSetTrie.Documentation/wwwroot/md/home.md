@@ -15,5 +15,5 @@ sets that facilitate fast retrieval of subsets and supersets of a query term.
   only return zero for equal elements. The library provides an implementation that uses hash code
   for this, making an arbitrary but consistent decision when collisions occur. Note however
   that this type is not suitable for use when any kind of persistence is involved, because these
-  arbitrary decisions are not guarenteed to be the same across runs.
+  arbitrary decisions are not guaranteed to be the same across runs.
 * ⚠ Is add-only, for the moment at least - no removals (purely because I don't need removals yet).

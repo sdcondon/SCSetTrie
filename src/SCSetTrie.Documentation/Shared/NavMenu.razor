@@ -1,5 +1,5 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
+﻿<div class="top-row ps-1 navbar navbar-dark">
+    <div class="container-fluid ps-2">
         <a class="navbar-brand" href=""><img src="img/SCSetTrie-32.png" alt="SCSetTrie icon" /> SCSetTrie</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
@@ -9,13 +9,13 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+        <div class="nav-item ps-1">
+            <NavLink class="nav-link ps-2" href="" Match="NavLinkMatch.All">
                 <span class="bi bi-house-door-fill" aria-hidden="true"></span> Home
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="getting-started">
+        <div class="nav-item ps-1">
+            <NavLink class="nav-link ps-2" href="getting-started">
                 <span class="bi bi-info-circle" aria-hidden="true"></span> Getting Started
             </NavLink>
         </div>
