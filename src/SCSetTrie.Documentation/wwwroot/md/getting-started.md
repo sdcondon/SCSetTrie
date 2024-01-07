@@ -3,7 +3,7 @@
 ## Using the Synchronous Implementations
 
 The simplest type to use is the `SetTrie<TKeyElement>` type - where
-TElement is the type of the elements of the stored sets.
+TKeyElement is the type of the elements of the stored sets.
 When looking at the code below, please note the following important
 facts about SetTrie construction:
 
@@ -18,9 +18,10 @@ facts about SetTrie construction:
   CollisionResolvingHashCodeComparer does this by using the hash code of the stored
   elements for ordering, and making an arbitrary but consistent decision when
   collisions occur. Of course, for IComparable types (such as the ints in the 
-  example below), it is a fairly safe bet that `Comparer<T>.Default` is antisymmetric,
-  so the recommendation is to use that where possible. This is only not a default
-  behaviour out of a degree of paranoia - this may change in a future update.
+  example below), it is a fairly safe bet that `Comparer<T>.Default` defines an
+  antisymmetric less-than-or-equal relationship, so the recommendation is to use that
+  where possible. This is only not a default behaviour out of a degree of paranoia -
+  this may change in a future update.
 * The default root node is a new instance of the `SetTrieDictionaryNode<,>` type,
   which just stores things in memory (using a Dictionary for child nodes).
 
@@ -43,8 +44,8 @@ IEnumerable<ISet<int>> supersets = setTrie.GetSupersets(new HashSet<int>([3]));
 
 Attaching values other than the sets themselves can be accomplished with the
 `SetTrie<TKeyElement, TValue>` type - where TValue is the type of the attached
-values. Note that the `SetTrie<TKeyElement>` class shown above is just a very
-thin utility wrapper around an instance of this class:
+values. Note that the `SetTrie<TKeyElement>` class demonstrated above is just a
+very thin utility wrapper around an instance of this class:
 
 ```
 using SCSetTrie;
@@ -73,7 +74,9 @@ There are only a few things to note:
 * `Add` becomes `AddAsync` and returns a `Task`.
 * `GetSubsets` and `GetSupersets` return `IAsyncEnumerable<TValue>`
 * The comparer constructor parameter is not optional. This is because the
-* unsuitability of default comparer for anything involving persistence.
+  unsuitability of default comparer for anything involving persistence -
+  the "arbitrary but consistent decision" it makes when collisions occur
+  will not necessarily be the same across runs.
 * The default root node is a new implmentation of a type that just stores 
   things in memory. Again, this trie implementation is really intended for
   custom node implementations, but there's no actual problem with just keeping
