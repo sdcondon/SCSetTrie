@@ -10,10 +10,5 @@ sets that facilitate fast retrieval of subsets and supersets of a query term.
   that allows the stored value to differ from the set itself, and also a thin wrapper for
   which the stored value is always just the set itself.
 * Allows specification of the `IComparer<T>` to use to determine the ordering of elements in
-  the tree. NB: for correct behaviour, the provided implementation MUST define a "less than or 
-  equal" relation on the set of elements that is "antisymmetric" - that is, the comparison can
-  only return zero for equal elements. The library provides an implementation that uses hash code
-  for this, making an arbitrary but consistent decision when collisions occur. Note however
-  that this type is not suitable for use when any kind of persistence is involved, because these
-  arbitrary decisions are not guaranteed to be the same across runs.
+  the tree.
 * ⚠ Is add-only, for the moment at least - no removals (purely because I don't need removals yet).
