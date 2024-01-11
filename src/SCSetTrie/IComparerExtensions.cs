@@ -41,7 +41,7 @@ namespace SCSetTrie
         // But in that case probably want to check (and not just in Debug) that there aren't duplicates.
         // Or do we always check, even with set types, to verify comparer isn't innappropriate? Have to
         // sort anyway, so not much of an extra load to check adjacent pairs as we do so?
-        ////public static T[] SortAndValidate<T>(this IComparer<T> comparer, IEnumerable<T> key)
+        ////public static T[] SortAndValidateUnambiguousOrdering<T>(this IComparer<T> comparer, IEnumerable<T> key)
         ////{
         ////    var keyElements = key.ToArray();
         ////    Array.Sort(keyElements, comparer);
@@ -49,26 +49,27 @@ namespace SCSetTrie
         ////    if (HasComparisonsOfZero(comparer, key))
         ////    {
         ////        throw new ArgumentException("Key contains at least one element pair for which the element comparer gives a comparison of zero. " +
-        ////            "Either they are duplicates (meaning the passed value is not a valid set), or the element comparer is unsuitable for use by a set trie.");
+        ////            "Either this pair are duplicates (meaning the passed value is not a valid set), or the element comparer is unsuitable for use by a set trie.");
         ////    }
         ////
         ////    return keyElements;
         ////}
 
-        private static bool HasComparisonsOfZero<T>(this IComparer<T> comparer, IEnumerable<T> enumerable)
-        {
-            var lastElement = enumerable.First();
-            foreach (var element in enumerable.Skip(1))
-            {
-                if (comparer.Compare(lastElement, element) == 0)
-                {
-                    return true;
-                }
-
-                lastElement = element;
-            }
-
-            return false;
-        }
+        ////private static bool HasComparisonsOfZero<T>(this IComparer<T> comparer, IEnumerable<T> enumerable)
+        ////{
+        ////    // can make the below slightly more performant...
+        ////    var lastElement = enumerable.First();
+        ////    foreach (var element in enumerable.Skip(1))
+        ////    {
+        ////        if (comparer.Compare(lastElement, element) == 0)
+        ////        {
+        ////            return true;
+        ////        }
+        ////
+        ////        lastElement = element;
+        ////    }
+        ////
+        ////    return false;
+        ////}
     }
 }

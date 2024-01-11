@@ -212,27 +212,27 @@ public class SetTrie<TKeyElement,TValue>
                 {
                     yield return node.Value;
                 }
-
-                yield break;
             }
-
-            if (node.Children.TryGetValue(keyElements[keyElementIndex], out var childNode))
+            else
             {
-                foreach (var value in ExpandNode(childNode, keyElementIndex + 1))
+                if (node.Children.TryGetValue(keyElements[keyElementIndex], out var childNode))
+                {
+                    foreach (var value in ExpandNode(childNode, keyElementIndex + 1))
+                    {
+                        yield return value;
+                    }
+                }
+
+                foreach (var value in ExpandNode(node, keyElementIndex + 1))
                 {
                     yield return value;
                 }
-            }
-
-            foreach (var value in ExpandNode(node, keyElementIndex + 1))
-            {
-                yield return value;
             }
         }
     }
 
     /// <summary>
-    /// Rerrieves the values associated with each stored superset a given set.
+    /// Retrieves the values associated with each stored superset a given set.
     /// </summary>
     /// <param name="key">The values associated with the stored supersets of this set will be retrieved.</param>
     /// <returns>An enumerable of the values associated with each stored superset the given set.</returns>
@@ -251,21 +251,23 @@ public class SetTrie<TKeyElement,TValue>
                 {
                     yield return value;
                 }
-
-                yield break;
             }
-
-            foreach (var (childKeyElement, childNode) in node.Children)
+            else
             {
-                if (keyElementIndex == 0 || elementComparer.Compare(childKeyElement, keyElements[keyElementIndex - 1]) > 0)
+                foreach (var (childKeyElement, childNode) in node.Children)
                 {
-                    var childComparedToCurrent = elementComparer.Compare(childKeyElement, keyElements[keyElementIndex]);
-                    if (childComparedToCurrent <= 0)
+                    if (keyElementIndex == 0 || elementComparer.Compare(childKeyElement, keyElements[keyElementIndex - 1]) > 0)
                     {
-                        var keyElementIndexOffset = childComparedToCurrent == 0 ? 1 : 0; 
-                        foreach (var value in ExpandNode(childNode, keyElementIndex + keyElementIndexOffset))
+                        var childComparedToCurrent = elementComparer.Compare(childKeyElement, keyElements[keyElementIndex]);
+
+                        if (childComparedToCurrent <= 0)
                         {
-                            yield return value;
+                            var keyElementIndexOffset = childComparedToCurrent == 0 ? 1 : 0;
+
+                            foreach (var value in ExpandNode(childNode, keyElementIndex + keyElementIndexOffset))
+                            {
+                                yield return value;
+                            }
                         }
                     }
                 }

@@ -165,22 +165,23 @@ public class AsyncSetTrie<TKeyElement,TValue>
                 {
                     yield return node.Value;
                 }
-
-                yield break;
             }
-
-            var childNode = await node.TryGetChildAsync(keyElements[keyElementIndex]);
-            if (childNode != null)
+            else
             {
-                await foreach (var value in ExpandNode(childNode, keyElementIndex + 1))
+                var childNode = await node.TryGetChildAsync(keyElements[keyElementIndex]);
+
+                if (childNode != null)
+                {
+                    await foreach (var value in ExpandNode(childNode, keyElementIndex + 1))
+                    {
+                        yield return value;
+                    }
+                }
+
+                await foreach (var value in ExpandNode(node, keyElementIndex + 1))
                 {
                     yield return value;
                 }
-            }
-
-            await foreach (var value in ExpandNode(node, keyElementIndex + 1))
-            {
-                yield return value;
             }
         }
     }
@@ -205,21 +206,23 @@ public class AsyncSetTrie<TKeyElement,TValue>
                 {
                     yield return value;
                 }
-
-                yield break;
             }
-
-            await foreach (var (childKeyElement, childNode) in node.GetChildren())
+            else
             {
-                if (keyElementIndex == 0 || elementComparer.Compare(childKeyElement, keyElements[keyElementIndex - 1]) > 0)
+                await foreach (var (childKeyElement, childNode) in node.GetChildren())
                 {
-                    var childComparedToCurrent = elementComparer.Compare(childKeyElement, keyElements[keyElementIndex]);
-                    if (childComparedToCurrent <= 0)
+                    if (keyElementIndex == 0 || elementComparer.Compare(childKeyElement, keyElements[keyElementIndex - 1]) > 0)
                     {
-                        var keyElementIndexOffset = childComparedToCurrent == 0 ? 1 : 0; 
-                        await foreach (var value in ExpandNode(childNode, keyElementIndex + keyElementIndexOffset))
+                        var childComparedToCurrent = elementComparer.Compare(childKeyElement, keyElements[keyElementIndex]);
+
+                        if (childComparedToCurrent <= 0)
                         {
-                            yield return value;
+                            var keyElementIndexOffset = childComparedToCurrent == 0 ? 1 : 0;
+
+                            await foreach (var value in ExpandNode(childNode, keyElementIndex + keyElementIndexOffset))
+                            {
+                                yield return value;
+                            }
                         }
                     }
                 }
