@@ -88,16 +88,17 @@ subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
 
 Asynchronous implementations also exist, intended for use with custom node
 implementations that utilise secondary storage. Moving from the synchronous 
-implementation to asynchronous should be very intuitive.
-There are only a few things to note:
+implementation to asynchronous should be very intuitive. There are only a few
+things to note (other than everything mentioned above about the comparer - which
+of course still applies here):
 
 * `Add` becomes `AddAsync` and returns a `Task`.
 * `Remove` becomes `RemoveAsync` and returns a `Task<bool>`.
 * `GetSubsets` and `GetSupersets` return `IAsyncEnumerable<TValue>`
-* The default root node is a new implementation of a type that still just stores 
+* The default root node is a new instance of a node type that still just stores 
   things in memory. Again, this trie implementation is really intended for
-  custom node implementations, but there's no actual problem with just keeping
-  stuff in memory, so this default remains.
+  custom node implementations, and this node type is really just intended as a
+  basis to help people create custom implementations - but it works just fine.
 
 Where the value to return is the stored set itself:
 
