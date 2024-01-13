@@ -11,7 +11,7 @@ facts about SetTrie construction:
   and a root node (that implements the backing store for the trie). However, there
   are defaults for both of these, so a parameterless constructor does exist.
 * First, the comparer. It is important that set tries can unambiguously order the
-  elements of a set. As such it is important that this comparer does not return 0
+  elements of a set. As such, it is important that this comparer does not return 0
   for any pairings other than those of equal elements (and of course sets shouldn't
   contain duplicates).
 
@@ -27,15 +27,15 @@ facts about SetTrie construction:
   `CollisionResolvingHashCodeComparer<T>`. This comparer uses the hash code of the 
   stored elements for ordering, making an arbitrary but consistent decision when collisions
   occur. This type can be safely used for set tries as long as, (a) your element types
-  have appropriate hash code semantics, and (b) you're not doing any kind of persistence
-  (the arbitrary but consistent decision will not be the same across runs). If either of
-  those conditions don't hold, this won't be of use to you, and you will need to implement
-  your own comparer (or of course make your element type comparable). It is of course also
-  worth noting that this comparer has some drawbacks with respect to performance, especially
-  if a lot of collisions occur (because it has to store them all, and look them up where
-  ncessary).
+  have appropriate hash code semantics for the queries that will be performed, and (b) 
+  you're not doing any kind of persistence (the arbitrary but consistent decision will not
+  be the same across runs). If either of those conditions don't hold, this won't be of use
+  to you, and you will need to implement your own comparer (or of course make your element
+  type comparable). It is of course also worth noting that this comparer has some drawbacks
+  with regards to performance, especially if a lot of collisions occur (because it has to
+  store all of its collision resolutions, and look them up where ncessary).
 * The default root node is a new instance of the `SetTrieDictionaryNode<,>` type,
-  which just stores things in memory (using a Dictionary for child nodes).
+  which just stores things in memory (using a `Dictionary<,>` for child nodes).
 
 ```
 using SCSetTrie;
@@ -92,7 +92,7 @@ implementation to asynchronous should be very intuitive.
 There are only a few things to note:
 
 * `Add` becomes `AddAsync` and returns a `Task`.
-* `Remove` becomes `AddAsync` and returns a `Task<bool>`.
+* `Remove` becomes `RemoveAsync` and returns a `Task<bool>`.
 * `GetSubsets` and `GetSupersets` return `IAsyncEnumerable<TValue>`
 * The default root node is a new implementation of a type that still just stores 
   things in memory. Again, this trie implementation is really intended for
