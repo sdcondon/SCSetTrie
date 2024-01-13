@@ -43,18 +43,24 @@ namespace SCSetTrie
 
         ////private static bool HasComparisonsOfZero<T>(this IComparer<T> comparer, IEnumerable<T> enumerable)
         ////{
-        ////    // can make the below slightly more performant...
-        ////    var lastElement = enumerable.First();
-        ////    foreach (var element in enumerable.Skip(1))
+        ////    using var enumerator = enumerable.GetEnumerator();
+
+        ////    if (!enumerator.MoveNext())
         ////    {
-        ////        if (comparer.Compare(lastElement, element) == 0)
+        ////        return false;
+        ////    }
+
+        ////    var lastElement = enumerator.Current;
+        ////    while (enumerator.MoveNext())
+        ////    {
+        ////        if (comparer.Compare(lastElement, enumerator.Current) == 0)
         ////        {
         ////            return true;
         ////        }
-        ////
-        ////        lastElement = element;
+
+        ////        lastElement = enumerator.Current;
         ////    }
-        ////
+
         ////    return false;
         ////}
     }
