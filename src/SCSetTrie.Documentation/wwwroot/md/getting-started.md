@@ -61,8 +61,8 @@ subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
 Attaching values other than the sets themselves can be accomplished with the
 `SetTrie<TKeyElement, TValue>` type - where TValue is the type of the attached
 values. A couple of notes:
-* The `SetTrie<TKeyElement>` class demonstrated above is just a
-  very thin utility wrapper around an instance of this class
+* The `SetTrie<TKeyElement>` class demonstrated above is just a very thin utility
+  wrapper around an instance of this class.
 * This class also has methods and ctors that accept `IEnumerable<TKeyElement>`,
   for ease of use. These behave identically to their `ISet<TKeyElement>`-accepting
   overloads, except that they also explicitly verify that the trie's element
