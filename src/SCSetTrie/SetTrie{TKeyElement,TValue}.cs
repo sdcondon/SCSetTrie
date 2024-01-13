@@ -27,11 +27,11 @@ public class SetTrie<TKeyElement,TValue>
     /// <summary>
     /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a new 
     /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and no initial content, that
-    /// uses a new <see cref="CollisionResolvingHashCodeComparer{T}"/> to determine the ordering of
-    /// elements in the tree.
+    /// uses the default comparer of the key element type to determine the ordering of elements in the
+    /// tree.
     /// </summary>
     public SetTrie()
-        : this(new CollisionResolvingHashCodeComparer<TKeyElement>(), new SetTrieDictionaryNode<TKeyElement, TValue>(), EmptyElements)
+        : this(Comparer<TKeyElement>.Default, new SetTrieDictionaryNode<TKeyElement, TValue>(), EmptyElements)
     {
     }
 
@@ -51,24 +51,24 @@ public class SetTrie<TKeyElement,TValue>
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a specified
-    /// root node and no (additional) initial content, that uses a new <see cref="CollisionResolvingHashCodeComparer{T}"/>
-    /// to determine the ordering of elements in the tree.
+    /// root node and no (additional) initial content, that uses the default comparer of the key element
+    /// type to determine the ordering of elements in the tree.
     /// </summary>
     /// <param name="root">The root node of the tree.</param>
     public SetTrie(ISetTrieNode<TKeyElement, TValue> root)
-        : this(new CollisionResolvingHashCodeComparer<TKeyElement>(), root, EmptyElements)
+        : this(Comparer<TKeyElement>.Default, root, EmptyElements)
     {
     }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a new 
-    /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and some initial content, that
-    /// uses a new <see cref="CollisionResolvingHashCodeComparer{T}"/> to determine the ordering of
-    /// elements in the tree.
+    /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and some initial content,
+    /// that uses the default comparer of the key element type to determine the ordering of elements
+    /// in the tree.
     /// </summary>
     /// <param name="content">The initial content to be added to the tree.</param>
     public SetTrie(IEnumerable<KeyValuePair<ISet<TKeyElement>, TValue>> content)
-        : this(new CollisionResolvingHashCodeComparer<TKeyElement>(), new SetTrieDictionaryNode<TKeyElement, TValue>(), content)
+        : this(Comparer<TKeyElement>.Default, new SetTrieDictionaryNode<TKeyElement, TValue>(), content)
     {
     }
 
@@ -105,14 +105,13 @@ public class SetTrie<TKeyElement,TValue>
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a 
-    /// specified root node and some (additional) initial content, that uses a new 
-    /// <see cref="CollisionResolvingHashCodeComparer{T}"/> to determine the ordering of elements
-    /// in the tree.
+    /// specified root node and some (additional) initial content, that uses the default comparer
+    /// of the key element type to determine the ordering of elements in the tree.
     /// </summary>
     /// <param name="root">The root node of the tree.</param>
     /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
     public SetTrie(ISetTrieNode<TKeyElement, TValue> root, IEnumerable<KeyValuePair<ISet<TKeyElement>, TValue>> content)
-        : this(new CollisionResolvingHashCodeComparer<TKeyElement>(), root, content)
+        : this(Comparer<TKeyElement>.Default, root, content)
     {
     }
 

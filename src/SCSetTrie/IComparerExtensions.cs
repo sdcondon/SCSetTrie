@@ -9,23 +9,6 @@ namespace SCSetTrie
 {
     internal static class IComparerExtensions
     {
-        // TODO-BREAKING: Could do something like this - but honestly don't want to have
-        // to explain how not providing a comparer is okay only if your type is comparable
-        // (with well-behaved comparison), *or* if you're not doing any kind of persistence.
-        // Its too.. arm-wavy. Won't give people confidence. Maybe I should just only
-        // allow default comparer for comaprable types (but make hash code one available)
-        ////public static IComparer<T> MakeDefaultComparer<T>()
-        ////{
-        ////    if (typeof(IComparable<T>).IsAssignableFrom(typeof(T)) || typeof(IComparable).IsAssignableFrom(typeof(T)))
-        ////    {
-        ////        return Comparer<T>.Default;
-        ////    }
-        ////    else
-        ////    {
-        ////        return new CollisionResolvingHashCodeComparer<T>();
-        ////    }
-        ////}
-
         public static T[] Sort<T>(this IComparer<T> comparer, ISet<T> set)
         {
             var elements = set.ToArray();

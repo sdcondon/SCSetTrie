@@ -1,5 +1,6 @@
 ﻿// Copyright © 2023 Simon Condon.
 // You may use this file in accordance with the terms of the MIT license.
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,16 +19,50 @@ public class AsyncSetTrie<TKeyElement>
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AsyncSetTrie{TKeyElement}"/> class with a new 
+    /// <see cref="AsyncSetTrieDictionaryNode{TKeyElement,TValue}"/> root node and no initial content, that
+    /// uses the default comparer of the key element type to determine the ordering of elements in the
+    /// tree.
+    /// </summary>
+    public AsyncSetTrie()
+    {
+        actualTree = new();
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncSetTrie{TKeyElement}"/> class with a new 
     /// <see cref="AsyncSetTrieDictionaryNode{TKeyElement,TValue}"/> root node and no initial content.
     /// </summary>
     /// <param name="elementComparer">
     /// The comparer to use to determine the ordering of elements when adding to tree and performing
-    /// queries. NB: For correct behaviour, MUST define a "less than or equal" relation on the set of
+    /// queries. NB: For correct behaviour, it MUST define a "less than or equal" relation on the set of
     /// elements that is "antisymmetric" - that is, the comparison can only return zero for equal elements.
     /// </param>
     public AsyncSetTrie(IComparer<TKeyElement> elementComparer)
     {
         actualTree = new(elementComparer);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncSetTrie{TKeyElement}"/> class with a specified
+    /// root node and no (additional) initial content, that uses the default comparer of the key element
+    /// type to determine the ordering of elements in the tree.
+    /// </summary>
+    /// <param name="root">The root node of the tree.</param>
+    public AsyncSetTrie(IAsyncSetTrieNode<TKeyElement, ISet<TKeyElement>> root)
+    {
+        actualTree = new(root);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncSetTrie{TKeyElement}"/> class with a new 
+    /// <see cref="AsyncSetTrieDictionaryNode{TKeyElement,TValue}"/> root node and some initial content,
+    /// that uses the default comparer of the key element type to determine the ordering of elements
+    /// in the tree.
+    /// </summary>
+    /// <param name="content">The initial content to be added to the tree.</param>
+    public AsyncSetTrie(IEnumerable<ISet<TKeyElement>> content)
+    {
+        actualTree = new(content.Select(a => KeyValuePair.Create(a, a)));
     }
 
     /// <summary>
@@ -58,7 +93,19 @@ public class AsyncSetTrie<TKeyElement>
     /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
     public AsyncSetTrie(IComparer<TKeyElement> elementComparer, IEnumerable<ISet<TKeyElement>> content)
     {
-        actualTree = new(elementComparer, content.Select(t => KeyValuePair.Create(t, t)));
+        actualTree = new(elementComparer, content.Select(a => KeyValuePair.Create(a, a)));
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncSetTrie{TKeyElement}"/> class with a 
+    /// specified root node and some (additional) initial content, that uses the default comparer
+    /// of the key element type to determine the ordering of elements in the tree.
+    /// </summary>
+    /// <param name="root">The root node of the tree.</param>
+    /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
+    public AsyncSetTrie(IAsyncSetTrieNode<TKeyElement, ISet<TKeyElement>> root, IEnumerable<ISet<TKeyElement>> content)
+    {
+        actualTree = new(root, content.Select(a => KeyValuePair.Create(a, a)));
     }
 
     /// <summary>
@@ -74,7 +121,7 @@ public class AsyncSetTrie<TKeyElement>
     /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
     public AsyncSetTrie(IComparer<TKeyElement> elementComparer, IAsyncSetTrieNode<TKeyElement, ISet<TKeyElement>> root, IEnumerable<ISet<TKeyElement>> content)
     {
-        actualTree = new(elementComparer, root, content.Select(t => KeyValuePair.Create(t, t)));
+        actualTree = new AsyncSetTrie<TKeyElement, ISet<TKeyElement>>(elementComparer, root, content.Select(a => KeyValuePair.Create(a, a)));
     }
 
     /// <summary>

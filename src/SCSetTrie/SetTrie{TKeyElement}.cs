@@ -1,5 +1,6 @@
 ﻿// Copyright © 2023 Simon Condon.
 // You may use this file in accordance with the terms of the MIT license.
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,8 +19,8 @@ public class SetTrie<TKeyElement>
     /// <summary>
     /// Initializes a new instance of the <see cref="SetTrie{TKeyElement}"/> class with a new 
     /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and no initial content, that
-    /// uses a new <see cref="CollisionResolvingHashCodeComparer{T}"/> to determine the ordering of
-    /// elements in the tree.
+    /// uses the default comparer of the key element type to determine the ordering of elements in the
+    /// tree.
     /// </summary>
     public SetTrie()
     {
@@ -42,8 +43,8 @@ public class SetTrie<TKeyElement>
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SetTrie{TKeyElement}"/> class with a specified
-    /// root node and no (additional) initial content, that uses a new <see cref="CollisionResolvingHashCodeComparer{T}"/>
-    /// to determine the ordering of elements in the tree.
+    /// root node and no (additional) initial content, that uses the default comparer of the key element
+    /// type to determine the ordering of elements in the tree.
     /// </summary>
     /// <param name="root">The root node of the tree.</param>
     public SetTrie(ISetTrieNode<TKeyElement, ISet<TKeyElement>> root)
@@ -54,8 +55,8 @@ public class SetTrie<TKeyElement>
     /// <summary>
     /// Initializes a new instance of the <see cref="SetTrie{TKeyElement}"/> class with a new 
     /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and some initial content, that
-    /// uses a new <see cref="CollisionResolvingHashCodeComparer{T}"/> to determine the ordering of
-    /// elements in the tree.
+    /// uses the default comparer of the key element type to determine the ordering of elements in the
+    /// tree.
     /// </summary>
     /// <param name="content">The initial content to be added to the tree.</param>
     public SetTrie(IEnumerable<ISet<TKeyElement>> content)
@@ -96,8 +97,8 @@ public class SetTrie<TKeyElement>
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SetTrie{TKeyElement}"/> class with a 
-    /// specified root node and some (additional) initial content, that uses a new 
-    /// <see cref="CollisionResolvingHashCodeComparer{T}"/> to determine the ordering of elements
+    /// specified root node and some (additional) initial content, that uses the default 
+    /// comparer of the key element type to determine the ordering of elements in the tree.
     /// in the tree.
     /// </summary>
     /// <param name="root">The root node of the tree.</param>
