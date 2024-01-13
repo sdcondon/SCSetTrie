@@ -33,7 +33,7 @@ facts about SetTrie construction:
   to you, and you will need to implement your own comparer (or of course make your element
   type comparable). It is of course also worth noting that this comparer has some drawbacks
   with regards to performance, especially if a lot of collisions occur (because it has to
-  store all of its collision resolutions, and look them up where ncessary).
+  store all of its collision resolutions, and look them up where necessary).
 * The default root node is a new instance of the `SetTrieDictionaryNode<,>` type,
   which just stores things in memory (using a `Dictionary<,>` for child nodes).
 
