@@ -30,7 +30,10 @@ facts about SetTrie construction:
   have appropriate hash code semantics, and (b) you're not doing any kind of persistence
   (the arbitrary but consistent decision will not be the same across runs). If either of
   those conditions don't hold, this won't be of use to you, and you will need to implement
-  your own comparer (or of course make your element type comparable).
+  your own comparer (or of course make your element type comparable). It is of course also
+  worth noting that this comparer has some drawbacks with respect to performance, especially
+  if a lot of collisions occur (because it has to store them all, and look them up where
+  ncessary).
 * The default root node is a new instance of the `SetTrieDictionaryNode<,>` type,
   which just stores things in memory (using a Dictionary for child nodes).
 
@@ -75,6 +78,10 @@ IEnumerable<string> subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
 
 // supersets will yield "3" and "1-3":
 IEnumerable<string> supersets = setTrie.GetSupersets(new HashSet<int>([3]));
+
+// subsets will yield just "∅":
+setTrie.Remove(new HashSet<int>([1]));
+subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
 ```
 
 ## Using the Asynchronous Implementations
@@ -132,4 +139,8 @@ IAsyncEnumerable<string> subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
 
 // supersets will yield "3" and "1-3":
 IAsyncEnumerable<string> supersets = setTrie.GetSupersets(new HashSet<int>([3]));
+
+// subsets will yield just "∅":
+await setTrie.RemoveAsync(new HashSet<int>([1]));
+subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
 ```
