@@ -60,28 +60,34 @@ subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
 
 Attaching values other than the sets themselves can be accomplished with the
 `SetTrie<TKeyElement, TValue>` type - where TValue is the type of the attached
-values. Note that the `SetTrie<TKeyElement>` class demonstrated above is just a
-very thin utility wrapper around an instance of this class:
+values. A couple of notes:
+* The `SetTrie<TKeyElement>` class demonstrated above is just a
+  very thin utility wrapper around an instance of this class
+* This class also has methods and ctors that accept `IEnumerable<TKeyElement>`,
+  for ease of use. These behave identically to their `ISet<TKeyElement>`-accepting
+  overloads, except that they also explicitly verify that the trie's element
+  comparer can unambiguously order the key - thus catching duplicate elements 
+  (or of course badly-behaved comparers).
 
 ```
 using SCSetTrie;
 
 var setTrie = new SetTrie<int, string>();
 
-setTrie.Add(new HashSet<int>([]), "∅");
-setTrie.Add(new HashSet<int>([1]), "1");
-setTrie.Add(new HashSet<int>([3]), "3");
-setTrie.Add(new HashSet<int>([1, 2, 3]), "1-3");
+setTrie.Add([], "∅");
+setTrie.Add([1], "1");
+setTrie.Add([3], "3");
+setTrie.Add([1, 2, 3], "1-3");
 
 // subsets will yield "∅" and "1":
-IEnumerable<string> subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
+IEnumerable<string> subsets = setTrie.GetSubsets([1, 2]);
 
 // supersets will yield "3" and "1-3":
-IEnumerable<string> supersets = setTrie.GetSupersets(new HashSet<int>([3]));
+IEnumerable<string> supersets = setTrie.GetSupersets([3]);
 
 // subsets will yield just "∅":
-setTrie.Remove(new HashSet<int>([1]));
-subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
+setTrie.Remove([1]);
+subsets = setTrie.GetSubsets([1, 2]);
 ```
 
 ## Using the Asynchronous Implementations
@@ -128,20 +134,20 @@ Where the value to return is something other than the stored set:
 ```
 using SCSetTrie;
 
-var setTrie = new AsyncSetTrie<int, string>(Comparer<int>.Default);
+var setTrie = new AsyncSetTrie<int, string>();
 
-await setTrie.AddAsync(new HashSet<int>([]), "∅");
-await setTrie.AddAsync(new HashSet<int>([1]), "1");
-await setTrie.AddAsync(new HashSet<int>([3]), "3");
-await setTrie.AddAsync(new HashSet<int>([1, 2, 3]), "1-3");
+await setTrie.AddAsync([], "∅");
+await setTrie.AddAsync([1], "1");
+await setTrie.AddAsync([3], "3");
+await setTrie.AddAsync([1, 2, 3], "1-3");
 
 // subsets will yield "∅" and "1":
-IAsyncEnumerable<string> subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
+IAsyncEnumerable<string> subsets = setTrie.GetSubsets([1, 2]);
 
 // supersets will yield "3" and "1-3":
-IAsyncEnumerable<string> supersets = setTrie.GetSupersets(new HashSet<int>([3]));
+IAsyncEnumerable<string> supersets = setTrie.GetSupersets([3]);
 
 // subsets will yield just "∅":
-await setTrie.RemoveAsync(new HashSet<int>([1]));
-subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
+await setTrie.RemoveAsync([1]);
+subsets = setTrie.GetSubsets([1, 2]);
 ```
