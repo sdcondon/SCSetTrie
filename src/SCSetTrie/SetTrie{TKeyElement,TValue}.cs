@@ -206,14 +206,7 @@ public class SetTrie<TKeyElement,TValue>
         
         IEnumerable<TValue> ExpandNode(ISetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
         {
-            if (keyElementIndex >= keyElements.Length)
-            {
-                if (node.HasValue)
-                {
-                    yield return node.Value;
-                }
-            }
-            else
+            if (keyElementIndex < keyElements.Length)
             {
                 if (node.Children.TryGetValue(keyElements[keyElementIndex], out var childNode))
                 {
@@ -226,6 +219,13 @@ public class SetTrie<TKeyElement,TValue>
                 foreach (var value in ExpandNode(node, keyElementIndex + 1))
                 {
                     yield return value;
+                }
+            }
+            else
+            {
+                if (node.HasValue)
+                {
+                    yield return node.Value;
                 }
             }
         }
@@ -245,14 +245,7 @@ public class SetTrie<TKeyElement,TValue>
 
         IEnumerable<TValue> ExpandNode(ISetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
         {
-            if (keyElementIndex >= keyElements.Length)
-            {
-                foreach (var value in GetAllDescendentValues(node))
-                {
-                    yield return value;
-                }
-            }
-            else
+            if (keyElementIndex < keyElements.Length)
             {
                 foreach (var (childKeyElement, childNode) in node.Children)
                 {
@@ -270,6 +263,13 @@ public class SetTrie<TKeyElement,TValue>
                             }
                         }
                     }
+                }
+            }
+            else
+            {
+                foreach (var value in GetAllDescendentValues(node))
+                {
+                    yield return value;
                 }
             }
         }

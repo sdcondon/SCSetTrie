@@ -159,14 +159,7 @@ public class AsyncSetTrie<TKeyElement,TValue>
         
         async IAsyncEnumerable<TValue> ExpandNode(IAsyncSetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
         {
-            if (keyElementIndex >= keyElements.Length)
-            {
-                if (node.HasValue)
-                {
-                    yield return node.Value;
-                }
-            }
-            else
+            if (keyElementIndex < keyElements.Length)
             {
                 var childNode = await node.TryGetChildAsync(keyElements[keyElementIndex]);
 
@@ -181,6 +174,13 @@ public class AsyncSetTrie<TKeyElement,TValue>
                 await foreach (var value in ExpandNode(node, keyElementIndex + 1))
                 {
                     yield return value;
+                }
+            }
+            else
+            {
+                if (node.HasValue)
+                {
+                    yield return node.Value;
                 }
             }
         }
@@ -200,14 +200,7 @@ public class AsyncSetTrie<TKeyElement,TValue>
 
         async IAsyncEnumerable<TValue> ExpandNode(IAsyncSetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
         {
-            if (keyElementIndex >= keyElements.Length)
-            {
-                await foreach (var value in GetAllDescendentValues(node))
-                {
-                    yield return value;
-                }
-            }
-            else
+            if (keyElementIndex < keyElements.Length)
             {
                 await foreach (var (childKeyElement, childNode) in node.GetChildren())
                 {
@@ -225,6 +218,13 @@ public class AsyncSetTrie<TKeyElement,TValue>
                             }
                         }
                     }
+                }
+            }
+            else
+            {
+                await foreach (var value in GetAllDescendentValues(node))
+                {
+                    yield return value;
                 }
             }
         }
