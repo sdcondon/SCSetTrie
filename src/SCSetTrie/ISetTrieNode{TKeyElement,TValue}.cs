@@ -32,13 +32,24 @@ public interface ISetTrieNode<TKeyElement, TValue>
     /// <summary>
     /// Gets or adds a child of this node.
     /// </summary>
-    /// <param name="keyElement">The element represented by the retrieved or added node.</param>
+    /// <param name="keyElement">The element represented by the node to be retrieved or added.</param>
     /// <returns>The retrieved or added node.</returns>
     ISetTrieNode<TKeyElement, TValue> GetOrAddChildNode(TKeyElement keyElement);
+
+    /// <summary>
+    /// Deletes a child of this node.
+    /// </summary>
+    /// <param name="keyElement">The element represented by the node to be removed.</param>
+    void DeleteChild(TKeyElement keyElement);
 
     /// <summary>
     /// Adds a value to this node, in so doing specifying that this node represents the "last" element of a stored set.
     /// </summary>
     /// <param name="value">The value to store.</param>
     void AddValue(TValue value);
+
+    /// <summary>
+    /// Removes the value from this node, in so doing specifying that this node no longer represents the "last" element of a stored set.
+    /// </summary>
+    void RemoveValue();
 }

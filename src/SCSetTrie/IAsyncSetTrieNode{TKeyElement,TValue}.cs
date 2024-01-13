@@ -45,8 +45,19 @@ public interface IAsyncSetTrieNode<TKeyElement, TValue>
     ValueTask<IAsyncSetTrieNode<TKeyElement, TValue>> GetOrAddChildAsync(TKeyElement keyElement);
 
     /// <summary>
+    /// Deletes a child of this node.
+    /// </summary>
+    /// <param name="keyElement">The element represented by the node to be removed.</param>
+    ValueTask DeleteChildAsync(TKeyElement keyElement);
+
+    /// <summary>
     /// Adds a value to this node, in so doing specifying that this node represents the "last" element of a stored set.
     /// </summary>
     /// <param name="value">The value to store.</param>
     ValueTask AddValueAsync(TValue value);
+
+    /// <summary>
+    /// Removes the value from this node, in so doing specifying that this node no longer represents the "last" element of a stored set.
+    /// </summary>
+    ValueTask RemoveValueAsync();
 }

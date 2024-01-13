@@ -14,6 +14,8 @@ namespace SCSetTrie;
 /// </summary>
 /// <typeparam name="TKeyElement">The type of each element of the stored sets.</typeparam>
 /// <typeparam name="TValue">The type of the value associated with each stored set.</typeparam>
+// TODO: we don't actually use ISet<>, we only need IEnum<>, and probably should explicitly check for
+// 0-comparisons anyway to validate unambiguous ordering from comparer.. Change interface to use IEnum<>?
 public class SetTrie<TKeyElement,TValue>
     where TKeyElement : notnull
 {
@@ -156,6 +158,49 @@ public class SetTrie<TKeyElement,TValue>
         }
 
         currentNode.AddValue(value);
+    }
+
+    /// <summary>
+    /// Removes a set from the trie.
+    /// </summary>
+    /// <param name="key">The set to remove.</param>
+    /// <returns>A value indicating whether the set was present prior to this operation.</returns>
+    public bool Remove(ISet<TKeyElement> key)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+
+        var keyElements = elementComparer.Sort(key);
+        return ExpandNode(root, 0);
+
+        bool ExpandNode(ISetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
+        {
+            if (keyElementIndex < keyElements.Length)
+            {
+                var keyElement = keyElements[keyElementIndex];
+
+                if (!node.Children.TryGetValue(keyElement, out var childNode) || !ExpandNode(childNode, keyElementIndex + 1))
+                {
+                    return false;
+                }
+
+                if (childNode.Children.Count == 0 && !childNode.HasValue)
+                {
+                    node.DeleteChild(keyElement);
+                }
+
+                return true;
+            }
+            else
+            {
+                if (!node.HasValue)
+                {
+                    return false;
+                }
+
+                node.RemoveValue();
+                return true;
+            }
+        }
     }
 
     /// <summary>

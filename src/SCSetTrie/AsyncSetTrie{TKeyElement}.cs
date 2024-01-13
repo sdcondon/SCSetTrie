@@ -10,6 +10,7 @@ namespace SCSetTrie;
 /// An implementation of a set trie - specifically, one for which the attached values are the sets themselves.
 /// </summary>
 /// <typeparam name="TKeyElement">The type of each element of the stored sets.</typeparam>
+// TODO-BREAKING: Probably should have made the set type the type parameter, so that return values could be specific..
 public class AsyncSetTrie<TKeyElement>
     where TKeyElement : notnull
 {
@@ -82,6 +83,16 @@ public class AsyncSetTrie<TKeyElement>
     /// <param name="key">The set to add.</param>
     /// <returns>A task representing completion of the operation.</returns>
     public Task AddAsync(ISet<TKeyElement> key) => actualTree.AddAsync(key, key);
+
+    /// <summary>
+    /// Removes a set from the trie.
+    /// </summary>
+    /// <param name="key">The set to remove.</param>
+    /// <returns>A value indicating whether the set was present prior to this operation.</returns>
+    public Task<bool> RemoveAsync(ISet<TKeyElement> key)
+    {
+        return actualTree.RemoveAsync(key);
+    }
 
     /// <summary>
     /// Returns an enumerable of each stored subset of a given set.

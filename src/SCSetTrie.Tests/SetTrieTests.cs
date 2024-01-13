@@ -77,6 +77,34 @@ namespace SCSetTrie.Tests
             })
             .ThenReturns((tc, rv) => rv.Should().BeEquivalentTo(tc.ExpectedResults));
 
+        public static Test RemovalBehaviour => TestThat
+            .GivenEachOf(() => new RemovalTestCase[]
+            {
+                new( // simple non-trivial test
+                    InitialContent: [[], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]],
+                    RemovedKey: [3],
+                    SubsetQuery: [1, 3],
+                    ExpectedResults: [[], [1], [1, 3]]),
+            })
+            .When(tc =>
+            {
+                var sut = new AsyncSetTrie<int>(new CollisionResolvingHashCodeComparer<int>(), new AsyncSetTrieDictionaryNode<int, ISet<int>>(), tc.InitialContent.Select(a => new HashSet<int>(a)));
+                sut.RemoveAsync(new HashSet<int>(tc.RemovedKey)).GetAwaiter().GetResult();
+                return sut.GetSubsets(new HashSet<int>(tc.SubsetQuery)).ToListAsync().GetAwaiter().GetResult();
+            })
+            .ThenReturns((tc, rv) => rv.Should().BeEquivalentTo(tc.ExpectedResults));
+
+        public static Test NullValueStorage => TestThat
+            .When(() =>
+            {
+                var sut = new SetTrie<int, string?>();
+                var key = new HashSet<int>([1]);
+                sut.Add(key, null);
+                sut.TryGet(key, out var value);
+                return value;
+            })
+            .ThenReturns(v => v.Should().BeNull());
+
         private record LookupManyTestCase(
             IEnumerable<IEnumerable<int>> Content,
             IEnumerable<int> Query,
@@ -86,5 +114,11 @@ namespace SCSetTrie.Tests
             IEnumerable<IEnumerable<int>> Content,
             IEnumerable<int> Query,
             bool ExpectedResult);
+
+        private record RemovalTestCase(
+            IEnumerable<IEnumerable<int>> InitialContent,
+            IEnumerable<int> RemovedKey,
+            IEnumerable<int> SubsetQuery,
+            IEnumerable<IEnumerable<int>> ExpectedResults);
     }
 }

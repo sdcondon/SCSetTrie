@@ -31,7 +31,7 @@ public class SetTrieDictionaryNode<TKeyElement, TValue> : ISetTrieNode<TKeyEleme
     /// <param name="equalityComparer">
     /// The equality comparer that should be used by the child dictionary.
     /// For correct behaviour, trie instances accessing this node should be using an <see cref="IComparer{T}"/> that is consistent with it. 
-    /// That is, one that only returns zero for elements considered equal by equality comparer used by this instance.
+    /// That is, one that only returns zero for elements considered equal by the equality comparer used by this instance.
     /// </param>
     public SetTrieDictionaryNode(IEqualityComparer<TKeyElement> equalityComparer)
     {
@@ -62,6 +62,12 @@ public class SetTrieDictionaryNode<TKeyElement, TValue> : ISetTrieNode<TKeyEleme
     }
 
     /// <inheritdoc/>
+    public void DeleteChild(TKeyElement keyElement)
+    {
+        children.Remove(keyElement);
+    }
+
+    /// <inheritdoc/>
     public void AddValue(TValue value)
     {
         if (HasValue)
@@ -71,5 +77,12 @@ public class SetTrieDictionaryNode<TKeyElement, TValue> : ISetTrieNode<TKeyEleme
 
         this.value = value;
         HasValue = true;
+    }
+
+    /// <inheritdoc/>
+    public void RemoveValue()
+    {
+        value = default;
+        HasValue = false;
     }
 }

@@ -9,10 +9,11 @@ namespace SCSetTrie
 {
     internal static class IComparerExtensions
     {
-        // Could do something like this - but honestly don't want to have to explain
-        // how not providing a comparer is okay only if your type is comparable (with 
-        // well-behaved comparison), Or if you're not doing any kind of persistence.
-        // Its too.. arm-wavy. Won't give people confidence.
+        // TODO-BREAKING: Could do something like this - but honestly don't want to have
+        // to explain how not providing a comparer is okay only if your type is comparable
+        // (with well-behaved comparison), *or* if you're not doing any kind of persistence.
+        // Its too.. arm-wavy. Won't give people confidence. Maybe I should just only
+        // allow default comparer for comaprable types (but make hash code one available)
         ////public static IComparer<T> MakeDefaultComparer<T>()
         ////{
         ////    if (typeof(IComparable<T>).IsAssignableFrom(typeof(T)) || typeof(IComparable).IsAssignableFrom(typeof(T)))
@@ -24,7 +25,7 @@ namespace SCSetTrie
         ////        return new CollisionResolvingHashCodeComparer<T>();
         ////    }
         ////}
-        
+
         public static T[] Sort<T>(this IComparer<T> comparer, ISet<T> set)
         {
             var elements = set.ToArray();
@@ -41,6 +42,8 @@ namespace SCSetTrie
         // But in that case probably want to check (and not just in Debug) that there aren't duplicates.
         // Or do we always check, even with set types, to verify comparer isn't innappropriate? Have to
         // sort anyway, so not much of an extra load to check adjacent pairs as we do so?
+        // Could wrap comparer in comparer that throws on zero rather than iterating afterwards?
+        // Fail fast, but suspect that'd be a fair amount slower on the happy path. Could test..
         ////public static T[] SortAndValidateUnambiguousOrdering<T>(this IComparer<T> comparer, IEnumerable<T> key)
         ////{
         ////    var keyElements = key.ToArray();

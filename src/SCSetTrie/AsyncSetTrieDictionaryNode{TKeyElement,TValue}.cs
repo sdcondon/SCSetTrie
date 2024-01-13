@@ -83,6 +83,13 @@ public class AsyncSetTrieDictionaryNode<TKeyElement, TValue> : IAsyncSetTrieNode
     }
 
     /// <inheritdoc/>
+    public ValueTask DeleteChildAsync(TKeyElement keyElement)
+    {
+        children.Remove(keyElement, out _);
+        return ValueTask.CompletedTask;
+    }
+
+    /// <inheritdoc/>
     public ValueTask AddValueAsync(TValue value)
     {
         if (HasValue)
@@ -92,6 +99,16 @@ public class AsyncSetTrieDictionaryNode<TKeyElement, TValue> : IAsyncSetTrieNode
 
         this.value = value;
         HasValue = true;
+
+        return ValueTask.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public ValueTask RemoveValueAsync()
+    {
+        value = default;
+        HasValue = false;
+
         return ValueTask.CompletedTask;
     }
 }

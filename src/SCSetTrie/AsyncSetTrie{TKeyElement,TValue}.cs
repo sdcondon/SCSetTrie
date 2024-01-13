@@ -14,6 +14,8 @@ namespace SCSetTrie;
 /// </summary>
 /// <typeparam name="TKeyElement">The type of each element of the stored sets.</typeparam>
 /// <typeparam name="TValue">The type of the value associated with each stored set.</typeparam>
+// TODO: we don't actually use ISet<>, we only need IEnum<>, and probably should explicitly check for
+// 0-comparisons anyway to validate unambiguous ordering from comparer.. Change interface to use IEnum<>?
 public class AsyncSetTrie<TKeyElement,TValue>
     where TKeyElement : notnull
 {
@@ -112,6 +114,50 @@ public class AsyncSetTrie<TKeyElement,TValue>
         }
 
         await currentNode.AddValueAsync(value);
+    }
+
+    /// <summary>
+    /// Removes a set from the trie.
+    /// </summary>
+    /// <param name="key">The set to remove.</param>
+    /// <returns>A value indicating whether the set was present prior to this operation.</returns>
+    public async Task<bool> RemoveAsync(ISet<TKeyElement> key)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+
+        var keyElements = elementComparer.Sort(key);
+        return await ExpandNodeAsync(root, 0);
+
+        async ValueTask<bool> ExpandNodeAsync(IAsyncSetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
+        {
+            if (keyElementIndex < keyElements.Length)
+            {
+                var keyElement = keyElements[keyElementIndex];
+                var childNode = await node.TryGetChildAsync(keyElement);
+
+                if (childNode == null || !await ExpandNodeAsync(childNode, keyElementIndex + 1))
+                {
+                    return false;
+                }
+
+                if (!await childNode.GetChildren().GetAsyncEnumerator().MoveNextAsync() && !childNode.HasValue)
+                {
+                    await node.DeleteChildAsync(keyElement);
+                }
+
+                return true;
+            }
+            else
+            {
+                if (!node.HasValue)
+                {
+                    return false;
+                }
+
+                await node.RemoveValueAsync();
+                return true;
+            }
+        }
     }
 
     /// <summary>
