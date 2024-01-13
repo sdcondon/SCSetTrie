@@ -235,7 +235,6 @@ public class AsyncSetTrie<TKeyElement,TValue>
         }
     }
 
-
     /// <summary>
     /// Adds a set and associated value to the trie.
     /// </summary>
