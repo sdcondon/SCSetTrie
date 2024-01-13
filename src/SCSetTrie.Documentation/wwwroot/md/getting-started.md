@@ -17,20 +17,20 @@ facts about SetTrie construction:
 
   The default comparer is `Comparer<TKeyElement>.Default`. This is very unlikely to
   exhibit proper behaviour if `TKeyElement` is neither `IComparable<TKeyElement>` nor
-  `IComporable`. In fact, unless the *runtime* types *are* comparable, the default comparer
+  `IComparable`. In fact, unless the *runtime* types *are* comparable, the default comparer
   just throws an exception. Our allowance of the use of the default comparer for non-comparable
   types is just to allow for cases such as storing `object`s and trusting the consumer
   that the *runtime* types can all be compared unambiguously.
   
   However, do not despair if your element types aren't comparable. To assist with the
-  storage of non-comparable types, the library does declares an `IComparer<T>` called
-  `CollisionResolvingHashCodeComparer<T>`. CollisionResolvingHashCodeComparer uses the
-  hash code of the stored elements for ordering, making an arbitrary but consistent
-  decision when collisions occur. This type can be safely used for set tries as long as,
-  (a) your element types have appropriate hash code semantics, and (b) you're not doing 
-  any kind of persistence (the arbitrary but consistent will not be the same across runs).
-  If either of those conditions don't hold, this won't be of use to you, and you will
-  need to implement your own comparer (or of course make your element type comparable).
+  storage of non-comparable types, the library declares an `IComparer<T>` called
+  `CollisionResolvingHashCodeComparer<T>`. This comparer uses the hash code of the 
+  stored elements for ordering, making an arbitrary but consistent decision when collisions
+  occur. This type can be safely used for set tries as long as, (a) your element types
+  have appropriate hash code semantics, and (b) you're not doing any kind of persistence
+  (the arbitrary but consistent decision will not be the same across runs). If either of
+  those conditions don't hold, this won't be of use to you, and you will need to implement
+  your own comparer (or of course make your element type comparable).
 * The default root node is a new instance of the `SetTrieDictionaryNode<,>` type,
   which just stores things in memory (using a Dictionary for child nodes).
 
