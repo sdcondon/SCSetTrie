@@ -41,8 +41,9 @@ public class AsyncSetTrie<TKeyElement,TValue>
     /// </summary>
     /// <param name="elementComparer">
     /// The comparer to use to determine the ordering of elements when adding to tree and performing
-    /// queries. NB: For correct behaviour, it MUST define a "less than or equal" relation on the set of
-    /// elements that is "antisymmetric" - that is, the comparison can only return zero for equal elements.
+    /// queries. NB: For correct behaviour, the trie must be able to unambiguously order the elements of a set.
+    /// As such, this comparer must only return zero for equal elements (and of course duplicates shouldn't
+    /// occur in any given set).
     /// </param>
     public AsyncSetTrie(IComparer<TKeyElement> elementComparer)
         : this(elementComparer, new AsyncSetTrieDictionaryNode<TKeyElement, TValue>(), EmptyElements)
@@ -78,8 +79,9 @@ public class AsyncSetTrie<TKeyElement,TValue>
     /// </summary>
     /// <param name="elementComparer">
     /// The comparer to use to determine the ordering of elements when adding to tree and performing
-    /// queries. NB: For correct behaviour, MUST define a "less than or equal" relation on the set of
-    /// elements that is "antisymmetric" - that is, the comparison can only return zero for equal elements.
+    /// queries. NB: For correct behaviour, the trie must be able to unambiguously order the elements of a set.
+    /// As such, this comparer must only return zero for equal elements (and of course duplicates shouldn't
+    /// occur in any given set).
     /// </param>
     /// <param name="root">The root node of the tree.</param>
     public AsyncSetTrie(IComparer<TKeyElement> elementComparer, IAsyncSetTrieNode<TKeyElement, TValue> root)
@@ -94,8 +96,9 @@ public class AsyncSetTrie<TKeyElement,TValue>
     /// </summary>
     /// <param name="elementComparer">
     /// The comparer to use to determine the ordering of elements when adding to tree and performing
-    /// queries. NB: For correct behaviour, MUST define a "less than or equal" relation on the set of
-    /// elements that is "antisymmetric" - that is, the comparison can only return zero for equal elements.
+    /// queries. NB: For correct behaviour, the trie must be able to unambiguously order the elements of a set.
+    /// As such, this comparer must only return zero for equal elements (and of course duplicates shouldn't
+    /// occur in any given set).
     /// </param>
     /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
     public AsyncSetTrie(IComparer<TKeyElement> elementComparer, IEnumerable<KeyValuePair<ISet<TKeyElement>, TValue>> content)
@@ -121,8 +124,9 @@ public class AsyncSetTrie<TKeyElement,TValue>
     /// </summary>
     /// <param name="elementComparer">
     /// The comparer to use to determine the ordering of elements when adding to tree and performing
-    /// queries. NB: For correct behaviour, MUST define a "less than or equal" relation on the set of
-    /// elements that is "antisymmetric" - that is, the comparison can only return zero for equal elements.
+    /// queries. NB: For correct behaviour, the trie must be able to unambiguously order the elements of a set.
+    /// As such, this comparer must only return zero for equal elements (and of course duplicates shouldn't
+    /// occur in any given set).
     /// </param>
     /// <param name="root">The root node of the tree.</param>
     /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
