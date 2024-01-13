@@ -21,7 +21,7 @@ Once cloned, it should "just work" as far as compilation is concerned.
 
 I'm not really expecting anyone to want to get involved, but please feel free to do so.
 I do keep an eye on the [issues](https://github.com/sdcondon/SCSetTrie/issues) tab, and will add a CONTRIBUTING.md if anyone drops me a message expressing interest.
-Do bear in mind that I'll probably consider it "done" once removal is implemented, though.
+Do bear in mind that I consider it largely "done" now, though.
 
 ## See Also
 

@@ -10,19 +10,27 @@ facts about SetTrie construction:
 * SetTries require a comparer (to determine the ordering of elements in the trie)
   and a root node (that implements the backing store for the trie). However, there
   are defaults for both of these, so a parameterless constructor does exist.
-* The default comparer is a new instance of a comparer declared in the library
-  called `CollisionResolvingHashCodeComparer<T>`. It is important that set tries can
-  unambiguously order the elements of a set. That is, it is important that the comparer 
-  they use defines an "antisymmetric" less-than-or-equal-to relationship between elements.
-  That is, that it doesn't return 0 for any pairings other than those of equal 
-  elements (and of course sets shouldn't contain duplicates).
-  CollisionResolvingHashCodeComparer does this by using the hash code of the stored
-  elements for ordering, and making an arbitrary but consistent decision when
-  collisions occur. Of course, for IComparable types (such as the ints in the 
-  example below), it is a fairly safe bet that `Comparer<T>.Default` defines an
-  antisymmetric less-than-or-equal relationship, so the recommendation is to use that
-  where possible. This is only not a default behaviour out of a degree of paranoia -
-  this may change in a future update.
+* First, the comparer. It is important that set tries can unambiguously order the
+  elements of a set. As such it is important that this comparer does not return 0
+  for any pairings other than those of equal elements (and of course sets shouldn't
+  contain duplicates).
+
+  The default comparer is `Comparer<TKeyElement>.Default`. This is very unlikely to
+  exhibit proper behaviour if `TKeyElement` is neither `IComparable<TKeyElement>` nor
+  `IComporable`. In fact, unless the *runtime* types *are* comparable, the default comparer
+  just throws an exception. Our allowance of the use of the default comparer for non-comparable
+  types is just to allow for cases such as storing `object`s and trusting the consumer
+  that the *runtime* types can all be compared unambiguously.
+  
+  However, do not despair if your element types aren't comparable. To assist with the
+  storage of non-comparable types, the library does declares an `IComparer<T>` called
+  `CollisionResolvingHashCodeComparer<T>`. CollisionResolvingHashCodeComparer uses the
+  hash code of the stored elements for ordering, making an arbitrary but consistent
+  decision when collisions occur. This type can be safely used for set tries as long as,
+  (a) your element types have appropriate hash code semantics, and (b) you're not doing 
+  any kind of persistence (the arbitrary but consistent will not be the same across runs).
+  If either of those conditions don't hold, this won't be of use to you, and you will
+  need to implement your own comparer (or of course make your element type comparable).
 * The default root node is a new instance of the `SetTrieDictionaryNode<,>` type,
   which just stores things in memory (using a Dictionary for child nodes).
 
@@ -41,6 +49,10 @@ IEnumerable<ISet<int>> subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
 
 // supersets will yield [3] and [1, 2, 3]:
 IEnumerable<ISet<int>> supersets = setTrie.GetSupersets(new HashSet<int>([3]));
+
+// subsets will yield just []:
+setTrie.Remove(new HashSet<int>([1]));
+subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
 ```
 
 Attaching values other than the sets themselves can be accomplished with the
@@ -73,12 +85,9 @@ implementation to asynchronous should be very intuitive.
 There are only a few things to note:
 
 * `Add` becomes `AddAsync` and returns a `Task`.
+* `Remove` becomes `AddAsync` and returns a `Task<bool>`.
 * `GetSubsets` and `GetSupersets` return `IAsyncEnumerable<TValue>`
-* The comparer constructor parameter is not optional. This is because of the
-  unsuitability of default comparer for anything involving persistence -
-  the "arbitrary but consistent decision" it makes when collisions occur will
-  not necessarily be the same across runs.
-* The default root node is a new implementation of a type that just stores 
+* The default root node is a new implementation of a type that still just stores 
   things in memory. Again, this trie implementation is really intended for
   custom node implementations, but there's no actual problem with just keeping
   stuff in memory, so this default remains.
@@ -100,6 +109,10 @@ IAsyncEnumerable<ISet<int>> subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]
 
 // supersets will yield [3] and [1, 2, 3]:
 IAsyncEnumerable<ISet<int>> supersets = setTrie.GetSupersets(new HashSet<int>([3]));
+
+// subsets will yield just []:
+await setTrie.RemoveAsync(new HashSet<int>([1]));
+subsets = setTrie.GetSubsets(new HashSet<int>([1, 2]));
 ```
 
 Where the value to return is something other than the stored set:
