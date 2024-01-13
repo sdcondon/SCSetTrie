@@ -11,7 +11,9 @@ namespace SCSetTrie;
 /// An implementation of a set trie - specifically, one for which the attached values are the sets themselves.
 /// </summary>
 /// <typeparam name="TKeyElement">The type of each element of the stored sets.</typeparam>
-// TODO-BREAKING: Probably should have made the set type the type parameter, so that return values could be specific..
+// TODO-BREAKING: Probably should have made the set type the type parameter, so that return values could be specific.
+// However, would need to be AsyncSetTrie<TKey, TKeyElement> where TKey : IEnumerable/ISet<TKeyElement> - and as such would
+// need a rename. Hmm..
 public class AsyncSetTrie<TKeyElement>
     where TKeyElement : notnull
 {

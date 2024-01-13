@@ -16,43 +16,43 @@ namespace SCSetTrie
             return elements;
         }
 
-        ////public static T[] SortAndValidateUnambiguousOrdering<T>(this IComparer<T> comparer, IEnumerable<T> key)
-        ////{
-        ////    var keyElements = key.ToArray();
-        ////    Array.Sort(keyElements, comparer);
+        public static T[] SortAndValidateUnambiguousOrdering<T>(this IComparer<T> comparer, IEnumerable<T> key)
+        {
+            var keyElements = key.ToArray();
+            Array.Sort(keyElements, comparer);
 
-        ////    if (HasComparisonsOfZero(comparer, key))
-        ////    {
-        ////        throw new ArgumentException(
-        ////            "Key contains at least one element pair for which the element comparer gives a comparison of zero. " +
-        ////            "Either this pair are duplicates (meaning the passed value is not a valid set), or the element comparer is unsuitable for use by a set trie.",
-        ////            nameof(key));
-        ////    }
+            if (HasComparisonsOfZero(comparer, key))
+            {
+                throw new ArgumentException(
+                    "Key contains at least one element pair for which the element comparer gives a comparison of zero. " +
+                    "Either this pair are duplicates (meaning the passed value is not a valid set), or the element comparer is unsuitable for use by a set trie.",
+                    nameof(key));
+            }
 
-        ////    return keyElements;
-        ////}
+            return keyElements;
+        }
 
-        ////private static bool HasComparisonsOfZero<T>(IComparer<T> comparer, IEnumerable<T> enumerable)
-        ////{
-        ////    using var enumerator = enumerable.GetEnumerator();
+        private static bool HasComparisonsOfZero<T>(IComparer<T> comparer, IEnumerable<T> enumerable)
+        {
+            using var enumerator = enumerable.GetEnumerator();
 
-        ////    if (!enumerator.MoveNext())
-        ////    {
-        ////        return false;
-        ////    }
+            if (!enumerator.MoveNext())
+            {
+                return false;
+            }
 
-        ////    var lastElement = enumerator.Current;
-        ////    while (enumerator.MoveNext())
-        ////    {
-        ////        if (comparer.Compare(lastElement, enumerator.Current) == 0)
-        ////        {
-        ////            return true;
-        ////        }
+            var lastElement = enumerator.Current;
+            while (enumerator.MoveNext())
+            {
+                if (comparer.Compare(lastElement, enumerator.Current) == 0)
+                {
+                    return true;
+                }
 
-        ////        lastElement = enumerator.Current;
-        ////    }
+                lastElement = enumerator.Current;
+            }
 
-        ////    return false;
-        ////}
+            return false;
+        }
     }
 }

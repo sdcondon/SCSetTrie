@@ -11,6 +11,8 @@ namespace SCSetTrie;
 /// </summary>
 /// <typeparam name="TKeyElement">The type of each element of the stored sets.</typeparam>
 // TODO-BREAKING: Probably should have made the set type the type parameter, so that return values could be specific.
+// However, would need to be SetTrie<TKey, TKeyElement> where TKey : IEnumerable/ISet<TKeyElement> - and as such would
+// need a rename. Hmm..
 public class SetTrie<TKeyElement>
     where TKeyElement : notnull
 {

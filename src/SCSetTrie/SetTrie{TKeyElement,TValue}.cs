@@ -14,8 +14,6 @@ namespace SCSetTrie;
 /// </summary>
 /// <typeparam name="TKeyElement">The type of each element of the stored sets.</typeparam>
 /// <typeparam name="TValue">The type of the value associated with each stored set.</typeparam>
-// TODO: we don't actually use ISet<>, we only need IEnum<>, and probably should explicitly check for
-// 0-comparisons anyway to validate unambiguous ordering from comparer.. Change interface to use IEnum<>?
 public class SetTrie<TKeyElement,TValue>
     where TKeyElement : notnull
 {
@@ -74,6 +72,24 @@ public class SetTrie<TKeyElement,TValue>
     }
 
     /// <summary>
+    /// <para>
+    /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a new 
+    /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and some initial content,
+    /// that uses the default comparer of the key element type to determine the ordering of elements
+    /// in the tree.
+    /// </para>
+    /// <para>
+    /// An <see cref="ArgumentException"/> will be thrown if any of the content keys contain duplicates -
+    /// that is, any element pairings for which the trie's element comparer gives a comparison of zero. 
+    /// </para>
+    /// </summary>
+    /// <param name="content">The initial content to be added to the tree.</param>
+    public SetTrie(IEnumerable<KeyValuePair<IEnumerable<TKeyElement>, TValue>> content)
+        : this(Comparer<TKeyElement>.Default, new SetTrieDictionaryNode<TKeyElement, TValue>(), content)
+    {
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a 
     /// specified root node and no (additional) initial content.
     /// </summary>
@@ -107,6 +123,29 @@ public class SetTrie<TKeyElement,TValue>
     }
 
     /// <summary>
+    /// <para>
+    /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a new 
+    /// <see cref="SetTrieDictionaryNode{TKeyElement,TValue}"/> root node and some (additional) initial
+    /// content.
+    /// </para>
+    /// <para>
+    /// An <see cref="ArgumentException"/> will be thrown if any of the content keys contain duplicates -
+    /// that is, any element pairings for which the trie's element comparer gives a comparison of zero. 
+    /// </para>
+    /// </summary>
+    /// <param name="elementComparer">
+    /// The comparer to use to determine the ordering of elements when adding to tree and performing
+    /// queries. NB: For correct behaviour, the trie must be able to unambiguously order the elements of a set.
+    /// As such, this comparer must only return zero for equal elements (and of course duplicates shouldn't
+    /// occur in any given set).
+    /// </param>
+    /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
+    public SetTrie(IComparer<TKeyElement> elementComparer, IEnumerable<KeyValuePair<IEnumerable<TKeyElement>, TValue>> content)
+        : this(elementComparer, new SetTrieDictionaryNode<TKeyElement, TValue>(), content)
+    {
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a 
     /// specified root node and some (additional) initial content, that uses the default comparer
     /// of the key element type to determine the ordering of elements in the tree.
@@ -114,6 +153,24 @@ public class SetTrie<TKeyElement,TValue>
     /// <param name="root">The root node of the tree.</param>
     /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
     public SetTrie(ISetTrieNode<TKeyElement, TValue> root, IEnumerable<KeyValuePair<ISet<TKeyElement>, TValue>> content)
+        : this(Comparer<TKeyElement>.Default, root, content)
+    {
+    }
+
+    /// <summary>
+    /// <para>
+    /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a 
+    /// specified root node and some (additional) initial content, that uses the default comparer
+    /// of the key element type to determine the ordering of elements in the tree.
+    /// </para>
+    /// <para>
+    /// An <see cref="ArgumentException"/> will be thrown if any of the content keys contain duplicates -
+    /// that is, any element pairings for which the trie's element comparer gives a comparison of zero. 
+    /// </para>
+    /// </summary>
+    /// <param name="root">The root node of the tree.</param>
+    /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
+    public SetTrie(ISetTrieNode<TKeyElement, TValue> root, IEnumerable<KeyValuePair<IEnumerable<TKeyElement>, TValue>> content)
         : this(Comparer<TKeyElement>.Default, root, content)
     {
     }
@@ -146,6 +203,39 @@ public class SetTrie<TKeyElement,TValue>
     }
 
     /// <summary>
+    /// <para>
+    /// Initializes a new instance of the <see cref="SetTrie{TKeyElement,TValue}"/> class with a 
+    /// specified root node and some (additional) initial content.
+    /// </para>
+    /// <para>
+    /// An <see cref="ArgumentException"/> will be thrown if any of the content keys contain duplicates -
+    /// that is, any element pairings for which the trie's element comparer gives a comparison of zero. 
+    /// </para>
+    /// </summary>
+    /// <param name="elementComparer">
+    /// The comparer to use to determine the ordering of elements when adding to tree and performing
+    /// queries. NB: For correct behaviour, the trie must be able to unambiguously order the elements of a set.
+    /// As such, this comparer must only return zero for equal elements (and of course duplicates shouldn't
+    /// occur in any given set).
+    /// </param>
+    /// <param name="root">The root node of the tree.</param>
+    /// <param name="content">The (additional) content to be added to the tree (beyond any already attached to the provided root node).</param>
+    public SetTrie(IComparer<TKeyElement> elementComparer, ISetTrieNode<TKeyElement, TValue> root, IEnumerable<KeyValuePair<IEnumerable<TKeyElement>, TValue>> content)
+    {
+        ArgumentNullException.ThrowIfNull(root);
+        ArgumentNullException.ThrowIfNull(elementComparer);
+        ArgumentNullException.ThrowIfNull(content);
+
+        this.root = root;
+        this.elementComparer = elementComparer;
+
+        foreach (var kvp in content)
+        {
+            Add(kvp.Key, kvp.Value);
+        }
+    }
+
+    /// <summary>
     /// Adds a set and associated value to the trie.
     /// </summary>
     /// <param name="key">The set to add.</param>
@@ -154,13 +244,25 @@ public class SetTrie<TKeyElement,TValue>
     {
         ArgumentNullException.ThrowIfNull(key);
 
-        var currentNode = root;
-        foreach (var keyElement in elementComparer.Sort(key))
-        {
-            currentNode = currentNode.GetOrAddChildNode(keyElement);
-        }
+        Add(elementComparer.Sort(key), value);
+    }
 
-        currentNode.AddValue(value);
+    /// <summary>
+    /// <para>
+    /// Adds a set and associated value to the trie.
+    /// </para>
+    /// <para>
+    /// An <see cref="ArgumentException"/> will be thrown if the passed key contains duplicates -
+    /// that is, any element pairings for which the trie's element comparer gives a comparison of zero. 
+    /// </para>
+    /// </summary>
+    /// <param name="key">The set to add.</param>
+    /// <param name="value">The value to associate with the set.</param>
+    public void Add(IEnumerable<TKeyElement> key, TValue value)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+
+        Add(elementComparer.SortAndValidateUnambiguousOrdering(key), value);
     }
 
     /// <summary>
@@ -173,6 +275,133 @@ public class SetTrie<TKeyElement,TValue>
         ArgumentNullException.ThrowIfNull(key);
 
         var keyElements = elementComparer.Sort(key);
+        return Remove(keyElements);
+    }
+
+    /// <summary>
+    /// <para>
+    /// Removes a set from the trie.
+    /// </para>
+    /// <para>
+    /// An <see cref="ArgumentException"/> will be thrown if the passed key contains duplicates -
+    /// that is, any element pairings for which the trie's element comparer gives a comparison of zero. 
+    /// </para>
+    /// </summary>
+    /// <param name="key">The set to remove.</param>
+    /// <returns>A value indicating whether the set was present prior to this operation.</returns>
+    public bool Remove(IEnumerable<TKeyElement> key)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+
+        var keyElements = elementComparer.SortAndValidateUnambiguousOrdering(key);
+        return Remove(keyElements);
+    }
+
+    /// <summary>
+    /// Attempts to retrieve the value associated with a set, matched exactly.
+    /// </summary>
+    /// <param name="key">The set to retrieve the associated value of.</param>
+    /// <param name="value">Will be populated with the retrieved value.</param>
+    /// <returns>True if and only if a value was successfully retrieved.</returns>
+    public bool TryGet(ISet<TKeyElement> key, [MaybeNullWhen(false)] out TValue value)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+
+        return TryGet(elementComparer.Sort(key), out value);
+    }
+
+    /// <summary>
+    /// <para>
+    /// Attempts to retrieve the value associated with a set, matched exactly.
+    /// </para>
+    /// <para>
+    /// An <see cref="ArgumentException"/> will be thrown if the passed key contains duplicates -
+    /// that is, any element pairings for which the trie's element comparer gives a comparison of zero. 
+    /// </para>
+    /// </summary>
+    /// <param name="key">The set to retrieve the associated value of.</param>
+    /// <param name="value">Will be populated with the retrieved value.</param>
+    /// <returns>True if and only if a value was successfully retrieved.</returns>
+    public bool TryGet(IEnumerable<TKeyElement> key, [MaybeNullWhen(false)] out TValue value)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+
+        return TryGet(elementComparer.SortAndValidateUnambiguousOrdering(key), out value);
+    }
+
+    /// <summary>
+    /// Retrieves the values associated with each stored subset of a given set.
+    /// </summary>
+    /// <param name="key">The values associated with the stored subsets of this set will be retrieved.</param>
+    /// <returns>An enumerable of the values associated with each stored subset of the given set.</returns>
+    public IEnumerable<TValue> GetSubsets(ISet<TKeyElement> key)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+
+        return GetSubsets(elementComparer.Sort(key));
+    }
+
+    /// <summary>
+    /// <para>
+    /// Retrieves the values associated with each stored subset of a given set.
+    /// </para>
+    /// <para>
+    /// An <see cref="ArgumentException"/> will be thrown if the passed key contains duplicates -
+    /// that is, any element pairings for which the trie's element comparer gives a comparison of zero. 
+    /// </para>
+    /// </summary>
+    /// <param name="key">The values associated with the stored subsets of this set will be retrieved.</param>
+    /// <returns>An enumerable of the values associated with each stored subset of the given set.</returns>
+    public IEnumerable<TValue> GetSubsets(IEnumerable<TKeyElement> key)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+
+        return GetSubsets(elementComparer.SortAndValidateUnambiguousOrdering(key));
+    }
+
+    /// <summary>
+    /// Retrieves the values associated with each stored superset a given set.
+    /// </summary>
+    /// <param name="key">The values associated with the stored supersets of this set will be retrieved.</param>
+    /// <returns>An enumerable of the values associated with each stored superset the given set.</returns>
+    public IEnumerable<TValue> GetSupersets(ISet<TKeyElement> key)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+
+        return GetSupersets(elementComparer.Sort(key));
+    }
+
+    /// <summary>
+    /// <para>
+    /// Retrieves the values associated with each stored superset a given set.
+    /// </para>
+    /// <para>
+    /// An <see cref="ArgumentException"/> will be thrown if the passed key contains duplicates -
+    /// that is, any element pairings for which the trie's element comparer gives a comparison of zero. 
+    /// </para>
+    /// </summary>
+    /// <param name="key">The values associated with the stored supersets of this set will be retrieved.</param>
+    /// <returns>An enumerable of the values associated with each stored superset the given set.</returns>
+    public IEnumerable<TValue> GetSupersets(IEnumerable<TKeyElement> key)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+
+        return GetSupersets(elementComparer.SortAndValidateUnambiguousOrdering(key));
+    }
+
+    private void Add(TKeyElement[] keyElements, TValue value)
+    {
+        var currentNode = root;
+        foreach (var keyElement in keyElements)
+        {
+            currentNode = currentNode.GetOrAddChildNode(keyElement);
+        }
+
+        currentNode.AddValue(value);
+    }
+
+    private bool Remove(TKeyElement[] keyElements)
+    {
         return ExpandNode(root, 0);
 
         bool ExpandNode(ISetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
@@ -206,18 +435,10 @@ public class SetTrie<TKeyElement,TValue>
         }
     }
 
-    /// <summary>
-    /// Attempts to retrieve the value associated with a set, matched exactly.
-    /// </summary>
-    /// <param name="key">The set to retrieve the associated value of.</param>
-    /// <param name="value">Will be populated with the retrieved value.</param>
-    /// <returns>True if and only if a value was successfully retrieved.</returns>
-    public bool TryGet(ISet<TKeyElement> key, [MaybeNullWhen(false)] out TValue value)
+    private bool TryGet(TKeyElement[] keyElements, [MaybeNullWhen(false)] out TValue value)
     {
-        ArgumentNullException.ThrowIfNull(key);
-
         var currentNode = root;
-        foreach (var keyElement in elementComparer.Sort(key))
+        foreach (var keyElement in keyElements)
         {
             if (currentNode.Children.TryGetValue(keyElement, out var childNode))
             {
@@ -240,18 +461,10 @@ public class SetTrie<TKeyElement,TValue>
         return false;
     }
 
-    /// <summary>
-    /// Retrieves the values associated with each stored subset of a given set.
-    /// </summary>
-    /// <param name="key">The values associated with the stored subsets of this set will be retrieved.</param>
-    /// <returns>An enumerable of the values associated with each stored subset of the given set.</returns>
-    public IEnumerable<TValue> GetSubsets(ISet<TKeyElement> key)
+    private IEnumerable<TValue> GetSubsets(TKeyElement[] keyElements)
     {
-        ArgumentNullException.ThrowIfNull(key);
-
-        var keyElements = elementComparer.Sort(key);
         return ExpandNode(root, 0);
-        
+
         IEnumerable<TValue> ExpandNode(ISetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
         {
             if (keyElementIndex < keyElements.Length)
@@ -279,16 +492,8 @@ public class SetTrie<TKeyElement,TValue>
         }
     }
 
-    /// <summary>
-    /// Retrieves the values associated with each stored superset a given set.
-    /// </summary>
-    /// <param name="key">The values associated with the stored supersets of this set will be retrieved.</param>
-    /// <returns>An enumerable of the values associated with each stored superset the given set.</returns>
-    public IEnumerable<TValue> GetSupersets(ISet<TKeyElement> key)
+    private IEnumerable<TValue> GetSupersets(TKeyElement[] keyElements)
     {
-        ArgumentNullException.ThrowIfNull(key);
-
-        var keyElements = elementComparer.Sort(key);
         return ExpandNode(root, 0);
 
         IEnumerable<TValue> ExpandNode(ISetTrieNode<TKeyElement, TValue> node, int keyElementIndex)
