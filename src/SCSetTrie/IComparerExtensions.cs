@@ -2,7 +2,6 @@
 // You may use this file in accordance with the terms of the MIT license.
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace SCSetTrie
@@ -14,34 +13,26 @@ namespace SCSetTrie
             var elements = set.ToArray();
             Array.Sort(elements, comparer);
 
-            ////Debug.Assert(
-            ////    !HasComparisonsOfZero(comparer, set),
-            ////    "Key contains at least one element pair for which the element comparer gives a comparison of zero. The element comparer is unsuitable for use by a set trie.");
-
             return elements;
         }
 
-        // Probably ultimately want to allow working with IEnumerable<T>.
-        // But in that case probably want to check (and not just in Debug) that there aren't duplicates.
-        // Or do we always check, even with set types, to verify comparer isn't innappropriate? Have to
-        // sort anyway, so not much of an extra load to check adjacent pairs as we do so?
-        // Could wrap comparer in comparer that throws on zero rather than iterating afterwards?
-        // Fail fast, but suspect that'd be a fair amount slower on the happy path. Could test..
         ////public static T[] SortAndValidateUnambiguousOrdering<T>(this IComparer<T> comparer, IEnumerable<T> key)
         ////{
         ////    var keyElements = key.ToArray();
         ////    Array.Sort(keyElements, comparer);
-        ////
+
         ////    if (HasComparisonsOfZero(comparer, key))
         ////    {
-        ////        throw new ArgumentException("Key contains at least one element pair for which the element comparer gives a comparison of zero. " +
-        ////            "Either this pair are duplicates (meaning the passed value is not a valid set), or the element comparer is unsuitable for use by a set trie.");
+        ////        throw new ArgumentException(
+        ////            "Key contains at least one element pair for which the element comparer gives a comparison of zero. " +
+        ////            "Either this pair are duplicates (meaning the passed value is not a valid set), or the element comparer is unsuitable for use by a set trie.",
+        ////            nameof(key));
         ////    }
-        ////
+
         ////    return keyElements;
         ////}
 
-        ////private static bool HasComparisonsOfZero<T>(this IComparer<T> comparer, IEnumerable<T> enumerable)
+        ////private static bool HasComparisonsOfZero<T>(IComparer<T> comparer, IEnumerable<T> enumerable)
         ////{
         ////    using var enumerator = enumerable.GetEnumerator();
 
