@@ -88,9 +88,9 @@ namespace SCSetTrie.Tests
             })
             .When(tc =>
             {
-                var sut = new AsyncSetTrie<int>(new CollisionResolvingHashCodeComparer<int>(), new AsyncSetTrieDictionaryNode<int, ISet<int>>(), tc.InitialContent.Select(a => new HashSet<int>(a)));
-                sut.RemoveAsync(new HashSet<int>(tc.RemovedKey)).GetAwaiter().GetResult();
-                return sut.GetSubsets(new HashSet<int>(tc.SubsetQuery)).ToListAsync().GetAwaiter().GetResult();
+                var sut = new SetTrie<int>(new SetTrieDictionaryNode<int, ISet<int>>(), tc.InitialContent.Select(a => new HashSet<int>(a)));
+                sut.Remove(new HashSet<int>(tc.RemovedKey));
+                return sut.GetSubsets(new HashSet<int>(tc.SubsetQuery)).ToList();
             })
             .ThenReturns((tc, rv) => rv.Should().BeEquivalentTo(tc.ExpectedResults));
 

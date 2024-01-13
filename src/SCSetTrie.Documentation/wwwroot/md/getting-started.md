@@ -97,7 +97,7 @@ Where the value to return is the stored set itself:
 ```
 using SCSetTrie;
 
-var setTrie = new AsyncSetTrie<int>(Comparer<int>.Default);
+var setTrie = new AsyncSetTrie<int>();
 
 await setTrie.AddAsync(new HashSet<int>([]));
 await setTrie.AddAsync(new HashSet<int>([1]));
