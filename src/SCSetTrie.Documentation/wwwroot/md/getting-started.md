@@ -11,10 +11,11 @@ facts about SetTrie construction:
   and a root node (that implements the backing store for the trie). However, there
   are defaults for both of these, so a parameterless constructor does exist.
 * The default comparer is a new instance of a comparer declared in the library
-  called `CollisionResolvingHashCodeComparer<T>`. It is important that the comparer 
-  defines an "antisymmetric" less-than-or-equal-to relationship between elements.
+  called `CollisionResolvingHashCodeComparer<T>`. It is important that set tries can
+  unambiguously order the elements of a set. That is, it is important that the comparer 
+  they use defines an "antisymmetric" less-than-or-equal-to relationship between elements.
   That is, that it doesn't return 0 for any pairings other than those of equal 
-  elements (and of course sets shouldn't contain duplicates). 
+  elements (and of course sets shouldn't contain duplicates).
   CollisionResolvingHashCodeComparer does this by using the hash code of the stored
   elements for ordering, and making an arbitrary but consistent decision when
   collisions occur. Of course, for IComparable types (such as the ints in the 
