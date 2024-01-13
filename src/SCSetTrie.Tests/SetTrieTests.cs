@@ -37,7 +37,7 @@ namespace SCSetTrie.Tests
             })
             .When(tc =>
             {
-                var sut = new SetTrie<int>(new SetTrieDictionaryNode<int, ISet<int>>(), tc.Content.Select(a => new HashSet<int>(a)));
+                var sut = new SetTrie<int>(tc.Content.Select(a => new HashSet<int>(a)));
                 return sut.GetSubsets(new HashSet<int>(tc.Query));
             })
             .ThenReturns((tc, rv) => rv.Should().BeEquivalentTo(tc.ExpectedResults));
@@ -72,7 +72,7 @@ namespace SCSetTrie.Tests
             })
             .When(tc =>
             {
-                var sut = new SetTrie<int>(new SetTrieDictionaryNode<int, ISet<int>>(), tc.Content.Select(a => new HashSet<int>(a)));
+                var sut = new SetTrie<int>(tc.Content.Select(a => new HashSet<int>(a)));
                 return sut.GetSupersets(new HashSet<int>(tc.Query));
             })
             .ThenReturns((tc, rv) => rv.Should().BeEquivalentTo(tc.ExpectedResults));
@@ -88,7 +88,7 @@ namespace SCSetTrie.Tests
             })
             .When(tc =>
             {
-                var sut = new SetTrie<int>(new SetTrieDictionaryNode<int, ISet<int>>(), tc.InitialContent.Select(a => new HashSet<int>(a)));
+                var sut = new SetTrie<int>(tc.InitialContent.Select(a => new HashSet<int>(a)));
                 sut.Remove(new HashSet<int>(tc.RemovedKey));
                 return sut.GetSubsets(new HashSet<int>(tc.SubsetQuery)).ToList();
             })

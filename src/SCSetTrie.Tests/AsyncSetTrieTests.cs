@@ -37,7 +37,7 @@ namespace SCSetTrie.Tests
             })
             .When(tc =>
             {
-                var sut = new AsyncSetTrie<int>(new AsyncSetTrieDictionaryNode<int, ISet<int>>(), tc.Content.Select(a => new HashSet<int>(a)));
+                var sut = new AsyncSetTrie<int>(tc.Content.Select(a => new HashSet<int>(a)));
                 return sut.GetSubsets(new HashSet<int>(tc.Query)).ToListAsync().GetAwaiter().GetResult(); ;
             })
             .ThenReturns((tc, rv) => rv.Should().BeEquivalentTo(tc.ExpectedResults));
@@ -72,7 +72,7 @@ namespace SCSetTrie.Tests
             })
             .When(tc =>
             {
-                var sut = new AsyncSetTrie<int>(new AsyncSetTrieDictionaryNode<int, ISet<int>>(), tc.Content.Select(a => new HashSet<int>(a)));
+                var sut = new AsyncSetTrie<int>(tc.Content.Select(a => new HashSet<int>(a)));
                 return sut.GetSupersets(new HashSet<int>(tc.Query)).ToListAsync().GetAwaiter().GetResult(); ;
             })
             .ThenReturns((tc, rv) => rv.Should().BeEquivalentTo(tc.ExpectedResults));
@@ -88,7 +88,7 @@ namespace SCSetTrie.Tests
             })
             .When(tc =>
             {
-                var sut = new AsyncSetTrie<int>(new AsyncSetTrieDictionaryNode<int, ISet<int>>(), tc.InitialContent.Select(a => new HashSet<int>(a)));
+                var sut = new AsyncSetTrie<int>(tc.InitialContent.Select(a => new HashSet<int>(a)));
                 sut.RemoveAsync(new HashSet<int>(tc.RemovedKey)).GetAwaiter().GetResult();
                 return sut.GetSubsets(new HashSet<int>(tc.SubsetQuery)).ToListAsync().GetAwaiter().GetResult();
             })
