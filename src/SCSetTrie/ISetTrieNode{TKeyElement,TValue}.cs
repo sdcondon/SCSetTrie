@@ -40,6 +40,8 @@ public interface ISetTrieNode<TKeyElement, TValue>
     /// Deletes a child of this node.
     /// </summary>
     /// <param name="keyElement">The element represented by the node to be removed.</param>
+    // TODO-BREAKING: Arrrgh, I used "ChildNode" above, but just "Child" here. Really shouldn't bug me but does.
+    // Not worth a major version bump, but the next time I'm making breaking changes anyway..
     void DeleteChild(TKeyElement keyElement);
 
     /// <summary>
