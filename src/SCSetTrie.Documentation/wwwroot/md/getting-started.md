@@ -2,8 +2,8 @@
 
 NB: This page doesn't really delve into what a [set trie](https://www.google.com/search?&q=set+trie) is,
 it just explains how to use this library to store sets for fast subset and superset lookup. In case it helps -
-fundamentally, set tries are just prefix tries - the only difference to the more common string prefix scenario is
-that the elements of the "string" (that is, set) are sorted before storage and querying.
+fundamentally, set tries are just prefix tries - the only significant difference to the more common string 
+prefix scenario is that the elements of the "string" (that is, set) are sorted before storage and querying.
 
 ## Using the Synchronous Implementations
 
