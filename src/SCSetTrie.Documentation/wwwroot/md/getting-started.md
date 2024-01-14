@@ -95,6 +95,13 @@ setTrie.Remove([1]);
 subsets = setTrie.GetSubsets([1, 2]);
 ```
 
+To back a trie with storage other than the dictionaries used by the library-provided node type, you will need to create an
+implementation of the [ISetTrieNode&lt;TKeyElement, TValue&gt;](https://github.com/sdcondon/SCSetTrie/blob/main/src/SCSetTrie/ISetTrieNode%7BTKeyElement%2CTValue%7D.cs)
+interface, and pass the instance of your type that represents the root node of the trie to the constructor. Hopefully,
+[SetTrieDictionaryNode&lt;TKeyElement, TValue&gt;](https://github.com/sdcondon/SCSetTrie/blob/main/src/SCSetTrie/SetTrieDictionaryNode%7BTKeyElement%2CTValue%7D.cs)
+serves as a somewhat useful example. Of course, if your implementation does any kind of IO, you probably want to be using
+the async version instead - see below.
+
 ## Using the Asynchronous Implementations
 
 Asynchronous implementations also exist, intended for use with custom node
@@ -156,3 +163,9 @@ IAsyncEnumerable<string> supersets = setTrie.GetSupersets([3]);
 await setTrie.RemoveAsync([1]);
 subsets = setTrie.GetSubsets([1, 2]);
 ```
+
+To back a trie with storage other than the dictionaries used by the library-provided node type, you will need to create an
+implementation of the [IAsyncSetTrieNode&lt;TKeyElement, TValue&gt;](https://github.com/sdcondon/SCSetTrie/blob/main/src/SCSetTrie/IAsyncSetTrieNode%7BTKeyElement%2CTValue%7D.cs)
+interface, and pass the instance of your type that represents the root node of the trie to the constructor. Hopefully,
+[AsyncSetTrieDictionaryNode&lt;TKeyElement, TValue&gt;](https://github.com/sdcondon/SCSetTrie/blob/main/src/SCSetTrie/AsyncSetTrieDictionaryNode%7BTKeyElement%2CTValue%7D.cs)
+serves as a somewhat useful example.
