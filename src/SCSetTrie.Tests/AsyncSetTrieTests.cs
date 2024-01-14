@@ -7,6 +7,36 @@ namespace SCSetTrie.Tests
 {
     public static class AsyncSetTrieTests
     {
+        public static Test ContainsBehaviour => TestThat
+            .GivenEachOf(() => new TryLookupSingleTestCase[]
+            {
+                new( // simple non-trivial test
+                    Content: [[], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]],
+                    Query: [1, 3],
+                    ExpectedResult: true),
+
+                new( // not found
+                    Content: [[], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]],
+                    Query: [1, 4],
+                    ExpectedResult: false),
+
+                new( // search for empty set - not found
+                    Content: [[1], [2], [1, 2]],
+                    Query: [],
+                    ExpectedResult: false),
+
+                new( // search for empty set - found
+                    Content: [[], [1], [2], [1, 2]],
+                    Query: [],
+                    ExpectedResult: true),
+            })
+            .When(async tc =>
+            {
+                var sut = new AsyncSetTrie<int>(tc.Content.Select(a => new HashSet<int>(a)));
+                return await sut.ContainsAsync(new HashSet<int>(tc.Query));
+            })
+            .ThenReturns((tc, rv) => rv.Result.Should().Be(tc.ExpectedResult));
+
         public static Test GetSubsetsBehaviour => TestThat
             .GivenEachOf(() => new LookupManyTestCase[]
             {
@@ -15,7 +45,12 @@ namespace SCSetTrie.Tests
                     Query: [1, 3],
                     ExpectedResults: [[], [1], [3], [1, 3]]),
 
-                new( // search for non-empty set in empty trie
+                new( // get all
+                    Content: [[], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]],
+                    Query: [1, 2, 3],
+                    ExpectedResults: [[], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]]),
+
+                new( // search empty trie
                     Content: [],
                     Query: [1],
                     ExpectedResults: []),
@@ -50,7 +85,17 @@ namespace SCSetTrie.Tests
                     Query: [1, 3],
                     ExpectedResults: [[1, 3], [1, 2, 3]]),
 
-                new( // search for non-empty set in empty trie
+                new( // get all
+                    Content: [[], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]],
+                    Query: [],
+                    ExpectedResults: [[], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]]),
+
+                new( // get none
+                    Content: [[], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]],
+                    Query: [0],
+                    ExpectedResults: []),
+
+                new( // search empty trie
                     Content: [],
                     Query: [1],
                     ExpectedResults: []),
@@ -105,15 +150,15 @@ namespace SCSetTrie.Tests
             })
             .ThenReturns(v => v.Should().BeNull());
 
-        private record LookupManyTestCase(
-            IEnumerable<IEnumerable<int>> Content,
-            IEnumerable<int> Query,
-            IEnumerable<IEnumerable<int>> ExpectedResults);
-
         private record TryLookupSingleTestCase(
             IEnumerable<IEnumerable<int>> Content,
             IEnumerable<int> Query,
             bool ExpectedResult);
+
+        private record LookupManyTestCase(
+            IEnumerable<IEnumerable<int>> Content,
+            IEnumerable<int> Query,
+            IEnumerable<IEnumerable<int>> ExpectedResults);
 
         private record RemovalTestCase(
             IEnumerable<IEnumerable<int>> InitialContent,

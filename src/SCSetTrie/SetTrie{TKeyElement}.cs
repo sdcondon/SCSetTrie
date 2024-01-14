@@ -154,6 +154,13 @@ public class SetTrie<TKeyElement>
     }
 
     /// <summary>
+    /// Determines whether a given set (matched exactly) is present in the trie.
+    /// </summary>
+    /// <param name="key">The set to retrieve the associated value of.</param>
+    /// <returns>True if and only if the set is present in the trie.</returns>
+    public bool Contains(ISet<TKeyElement> key) => actualTree.TryGet(key, out _);
+
+    /// <summary>
     /// Returns an enumerable of each stored subset of a given set.
     /// </summary>
     /// <param name="key">The stored subsets of this set will be retrieved.</param>

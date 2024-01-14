@@ -7,6 +7,36 @@ namespace SCSetTrie.Tests
 {
     public static class SetTrieTests
     {
+        public static Test ContainsBehaviour => TestThat
+            .GivenEachOf(() => new TryLookupSingleTestCase[]
+            {
+                new( // simple non-trivial test
+                    Content: [[], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]],
+                    Query: [1, 3],
+                    ExpectedResult: true),
+
+                new( // not found
+                    Content: [[], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]],
+                    Query: [1, 4],
+                    ExpectedResult: false),
+
+                new( // search for empty set - not found
+                    Content: [[1], [2], [1, 2]],
+                    Query: [],
+                    ExpectedResult: false),
+
+                new( // search for empty set - found
+                    Content: [[], [1], [2], [1, 2]],
+                    Query: [],
+                    ExpectedResult: true),
+            })
+            .When(async tc =>
+            {
+                var sut = new SetTrie<int>(tc.Content.Select(a => new HashSet<int>(a)));
+                return sut.Contains(new HashSet<int>(tc.Query));
+            })
+            .ThenReturns((tc, rv) => rv.Result.Should().Be(tc.ExpectedResult));
+
         public static Test GetSubsetsBehaviour => TestThat
             .GivenEachOf(() => new LookupManyTestCase[]
             {
@@ -105,15 +135,15 @@ namespace SCSetTrie.Tests
             })
             .ThenReturns(v => v.Should().BeNull());
 
-        private record LookupManyTestCase(
-            IEnumerable<IEnumerable<int>> Content,
-            IEnumerable<int> Query,
-            IEnumerable<IEnumerable<int>> ExpectedResults);
-
         private record TryLookupSingleTestCase(
             IEnumerable<IEnumerable<int>> Content,
             IEnumerable<int> Query,
             bool ExpectedResult);
+
+        private record LookupManyTestCase(
+            IEnumerable<IEnumerable<int>> Content,
+            IEnumerable<int> Query,
+            IEnumerable<IEnumerable<int>> ExpectedResults);
 
         private record RemovalTestCase(
             IEnumerable<IEnumerable<int>> InitialContent,
