@@ -10,11 +10,14 @@ namespace SCSetTrie;
 /// An implementation of a set trie - specifically, one for which the attached values are the sets themselves.
 /// </summary>
 /// <typeparam name="TKeyElement">The type of each element of the stored sets.</typeparam>
-// TODO-BREAKING: Probably should have made the set type the type parameter, so that return values could be specific.
+// TODO-BREAKING: Might be imporved by making the set type a type parameter, so that return values could be specific.
 // However, would need to be SetTrie<TKey, TKeyElement> where TKey : IEnumerable/ISet<TKeyElement> - and as such would
-// need a rename. Hmm..
-// and/or (also breaking) perhaps should use IEnumerable<> for the underlying values, not ISet<>.. We don't actually use ISet<>,
-// its just to push the "no duplicates" angle..
+// need a rename to not clash. Hmm. Also, there's value in having a single type parameter - the SetTrie<K> and SetTrie<K,V>
+// pairing is intuitive. Something like DeterminateValueSetTrie<KE,V> instead might be better if we need two type params
+// anyway?
+// TODO-BREAKING: changes to allow for IEnum<>-accepting methods, for ease-of-use. Perhaps should just use IEnumerable<>
+// for the underlying values, not ISet<>. We don't actually use ISet<>, its just to push the "no duplicates" angle.
+// But the no duplicates angle is perhaps important - this is after all a **set** trie. Hmm.. This type is annoying.
 public class SetTrie<TKeyElement>
     where TKeyElement : notnull
 {
