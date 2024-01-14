@@ -1,5 +1,10 @@
 ﻿# Getting Started
 
+NB: This page doesn't really delve into what a [set trie](https://www.google.com/search?&q=set+trie) is,
+it just explains how to use this library to store sets for fast subset and superset lookup. In case it helps -
+fundamentally, set tries are just prefix tries - the only difference to the more common string prefix scenario is
+that the elements of the "string" (that is, set) are sorted before storage and querying.
+
 ## Using the Synchronous Implementations
 
 The simplest type to use is the `SetTrie<TKeyElement>` type - where
@@ -100,7 +105,7 @@ of course still applies here):
 
 * `Add` becomes `AddAsync` and returns a `Task`.
 * `Remove` becomes `RemoveAsync` and returns a `Task<bool>`.
-* `GetSubsets` and `GetSupersets` return `IAsyncEnumerable<TValue>`
+* `GetSubsets` and `GetSupersets` return `IAsyncEnumerable<TValue>`.
 * The default root node is a new instance of a node type that still just stores 
   things in memory. Again, this trie implementation is really intended for
   custom node implementations, and this node type is really just intended as a

@@ -1,7 +1,7 @@
 ﻿# Home
 
-The SCSetTrie NuGet package contains a few set trie implementations for .NET. That is, data structures for the storage of
-sets that facilitate fast retrieval of subsets and supersets of a query term.
+The SCSetTrie NuGet package contains a few [set trie](https://www.google.com/search?&q=set+trie) implementations for .NET.
+That is, data structures for the storage of sets that facilitate fast retrieval of subsets and supersets of a query term.
 
 * Allows for customisation of underlying storage via an abstraction for tree nodes.
   Included in the library are node implementations that just store things in memory.

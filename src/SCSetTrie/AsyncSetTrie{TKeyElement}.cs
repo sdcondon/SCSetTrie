@@ -1,6 +1,5 @@
 ﻿// Copyright © 2023-2024 Simon Condon.
 // You may use this file in accordance with the terms of the MIT license.
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +10,7 @@ namespace SCSetTrie;
 /// An implementation of a set trie - specifically, one for which the attached values are the sets themselves.
 /// </summary>
 /// <typeparam name="TKeyElement">The type of each element of the stored sets.</typeparam>
-// TODO-BREAKING: Might be imporved by making the set type a type parameter, so that return values could be specific.
+// TODO-BREAKING: Might be improved by making the set type a type parameter, so that return values could be specific.
 // However, would need to be SetTrie<TKey, TKeyElement> where TKey : IEnumerable/ISet<TKeyElement> - and as such would
 // need a rename to not clash. Hmm. Also, there's value in having a single type parameter - the SetTrie<K> and SetTrie<K,V>
 // pairing is intuitive. Something like DeterminateValueSetTrie<KE,V> instead might be better if we need two type params
@@ -26,9 +25,9 @@ public class AsyncSetTrie<TKeyElement>
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AsyncSetTrie{TKeyElement}"/> class with a new 
-    /// <see cref="AsyncSetTrieDictionaryNode{TKeyElement,TValue}"/> root node and no initial content, that
-    /// uses the default comparer of the key element type to determine the ordering of elements in the
-    /// tree.
+    /// <see cref="AsyncSetTrieDictionaryNode{TKeyElement,TValue}"/> root node and no initial content,
+    /// that uses the default comparer of the key element type to determine the ordering of elements
+    /// in the tree.
     /// </summary>
     public AsyncSetTrie()
     {
@@ -41,9 +40,9 @@ public class AsyncSetTrie<TKeyElement>
     /// </summary>
     /// <param name="elementComparer">
     /// The comparer to use to determine the ordering of elements when adding to tree and performing
-    /// queries. NB: For correct behaviour, the trie must be able to unambiguously order the elements of a set.
-    /// As such, this comparer must only return zero for equal elements (and of course duplicates shouldn't
-    /// occur in any given set).
+    /// queries. NB: For correct behaviour, the trie must be able to unambiguously order the elements
+    /// of a set. As such, this comparer must only return zero for equal elements (and of course 
+    /// duplicates shouldn't occur in any given set).
     /// </param>
     public AsyncSetTrie(IComparer<TKeyElement> elementComparer)
     {
@@ -147,10 +146,7 @@ public class AsyncSetTrie<TKeyElement>
     /// </summary>
     /// <param name="key">The set to remove.</param>
     /// <returns>A value indicating whether the set was present prior to this operation.</returns>
-    public Task<bool> RemoveAsync(ISet<TKeyElement> key)
-    {
-        return actualTree.RemoveAsync(key);
-    }
+    public Task<bool> RemoveAsync(ISet<TKeyElement> key) => actualTree.RemoveAsync(key);
 
     /// <summary>
     /// Returns an enumerable of each stored subset of a given set.
