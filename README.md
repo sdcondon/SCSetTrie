@@ -4,7 +4,7 @@
 
 [![NuGet version (SCSetTrie)](https://img.shields.io/nuget/v/SCSetTrie.svg?style=flat-square)](https://www.nuget.org/packages/SCSetTrie/) 
 [![NuGet downloads (SCSetTrie)](https://img.shields.io/nuget/dt/SCSetTrie.svg?style=flat-square)](https://www.nuget.org/packages/SCSetTrie/) 
-[![Commits since latest release](https://img.shields.io/github/commits-since/sdcondon/SCSetTrie/latest?style=flat-square)](https://github.com/sdcondon/SCSetTrie/compare/2.1.0...main)
+[![Commits since latest release](https://img.shields.io/github/commits-since/sdcondon/SCSetTrie/latest?style=flat-square)](https://github.com/sdcondon/SCSetTrie/compare/2.2.0...main)
 
 This repository contains the source code for the SCSetTrie NuGet package - along with its tests, performance benchmarks, and documentation website.
 
