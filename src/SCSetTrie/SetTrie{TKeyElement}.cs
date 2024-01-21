@@ -156,7 +156,7 @@ public class SetTrie<TKeyElement>
     /// <summary>
     /// Determines whether a given set (matched exactly) is present in the trie.
     /// </summary>
-    /// <param name="key">The set to retrieve the associated value of.</param>
+    /// <param name="key">The set to check for.</param>
     /// <returns>True if and only if the set is present in the trie.</returns>
     public bool Contains(ISet<TKeyElement> key) => actualTree.TryGet(key, out _);
 

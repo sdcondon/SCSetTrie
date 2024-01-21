@@ -151,7 +151,7 @@ public class AsyncSetTrie<TKeyElement>
     /// <summary>
     /// Determines whether a given set (matched exactly) is present in the trie.
     /// </summary>
-    /// <param name="key">The set to retrieve the associated value of.</param>
+    /// <param name="key">The set to check for.</param>
     /// <returns>True if and only if the set is present in the trie.</returns>
     public async Task<bool> ContainsAsync(ISet<TKeyElement> key) => (await actualTree.TryGetAsync(key)).isSucceeded;
 
