@@ -12,8 +12,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repo Items", "Repo Items", "{998C2912-89A6-4E21-9892-4D5CBB846811}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
+		..\.github\workflows\DeployDocsToGitHubPages.yml = ..\.github\workflows\DeployDocsToGitHubPages.yml
 		..\LICENSE = ..\LICENSE
+		..\.github\workflows\PushNuGetPackages.yml = ..\.github\workflows\PushNuGetPackages.yml
 		..\README.md = ..\README.md
+		..\.github\workflows\ValidationBuild.yml = ..\.github\workflows\ValidationBuild.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{64A0E6E3-98C3-431D-92E5-E989F0541C8A}"
