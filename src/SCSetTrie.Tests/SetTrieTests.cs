@@ -30,12 +30,12 @@ namespace SCSetTrie.Tests
                     Query: [],
                     ExpectedResult: true),
             })
-            .When(async tc =>
+            .When(tc =>
             {
                 var sut = new SetTrie<int>(tc.Content.Select(a => new HashSet<int>(a)));
                 return sut.Contains(new HashSet<int>(tc.Query));
             })
-            .ThenReturns((tc, rv) => rv.Result.Should().Be(tc.ExpectedResult));
+            .ThenReturns((tc, rv) => rv.Should().Be(tc.ExpectedResult));
 
         public static Test GetSubsetsBehaviour => TestThat
             .GivenEachOf(() => new LookupManyTestCase[]
