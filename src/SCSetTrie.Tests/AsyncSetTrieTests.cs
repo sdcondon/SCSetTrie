@@ -30,12 +30,12 @@ namespace SCSetTrie.Tests
                     Query: [],
                     ExpectedResult: true),
             })
-            .When(async tc =>
+            .WhenAsync(async tc =>
             {
                 var sut = new AsyncSetTrie<int>(tc.Content.Select(a => new HashSet<int>(a)));
                 return await sut.ContainsAsync(new HashSet<int>(tc.Query));
             })
-            .ThenReturns((tc, rv) => rv.Result.Should().Be(tc.ExpectedResult));
+            .ThenReturns((tc, rv) => rv.Should().Be(tc.ExpectedResult));
 
         public static Test GetSubsetsBehaviour => TestThat
             .GivenEachOf(() => new LookupManyTestCase[]
@@ -70,12 +70,12 @@ namespace SCSetTrie.Tests
                     Query: [],
                     ExpectedResults: [[]]),
             })
-            .When(async tc =>
+            .WhenAsync(async tc =>
             {
                 var sut = new AsyncSetTrie<int>(tc.Content.Select(a => new HashSet<int>(a)));
                 return await sut.GetSubsets(new HashSet<int>(tc.Query)).ToListAsync();
             })
-            .ThenReturns((tc, rv) => rv.Result.Should().BeEquivalentTo(tc.ExpectedResults));
+            .ThenReturns((tc, rv) => rv.Should().BeEquivalentTo(tc.ExpectedResults));
 
         public static Test GetSupersetsBehaviour => TestThat
             .GivenEachOf(() => new LookupManyTestCase[]
@@ -115,12 +115,12 @@ namespace SCSetTrie.Tests
                     Query: [],
                     ExpectedResults: [[], [1], [2], [1, 2]]),
             })
-            .When(async tc =>
+            .WhenAsync(async tc =>
             {
                 var sut = new AsyncSetTrie<int>(tc.Content.Select(a => new HashSet<int>(a)));
                 return await sut.GetSupersets(new HashSet<int>(tc.Query)).ToListAsync();
             })
-            .ThenReturns((tc, rv) => rv.Result.Should().BeEquivalentTo(tc.ExpectedResults));
+            .ThenReturns((tc, rv) => rv.Should().BeEquivalentTo(tc.ExpectedResults));
 
         public static Test RemovalBehaviour => TestThat
             .GivenEachOf(() => new RemovalTestCase[]
@@ -131,13 +131,13 @@ namespace SCSetTrie.Tests
                     SubsetQuery: [1, 3],
                     ExpectedResults: [[], [1], [1, 3]]),
             })
-            .When(async tc =>
+            .WhenAsync(async tc =>
             {
                 var sut = new AsyncSetTrie<int>(tc.InitialContent.Select(a => new HashSet<int>(a)));
                 sut.RemoveAsync(new HashSet<int>(tc.RemovedKey)).GetAwaiter().GetResult();
                 return await sut.GetSubsets(new HashSet<int>(tc.SubsetQuery)).ToListAsync();
             })
-            .ThenReturns((tc, rv) => rv.Result.Should().BeEquivalentTo(tc.ExpectedResults));
+            .ThenReturns((tc, rv) => rv.Should().BeEquivalentTo(tc.ExpectedResults));
 
         public static Test NullValueStorage => TestThat
             .When(() =>
