@@ -54,6 +54,7 @@ public class SetTrieDictionaryNode<TKeyElement, TValue> : ISetTrieNode<TKeyEleme
     {
         if (!children.TryGetValue(keyElement, out var node))
         {
+            // TODO-BUG: needs to use the same equality comparer, not the default! Oops..
             node = new SetTrieDictionaryNode<TKeyElement, TValue>();
             children.Add(keyElement, node);
         }

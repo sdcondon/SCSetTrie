@@ -73,6 +73,7 @@ public class AsyncSetTrieDictionaryNode<TKeyElement, TValue> : IAsyncSetTrieNode
     /// <inheritdoc/>
     public ValueTask<IAsyncSetTrieNode<TKeyElement, TValue>> GetOrAddChildAsync(TKeyElement keyElement)
     {
+        // TODO-BUG: needs to use the same equality comparer, not the default! Oops..
         IAsyncSetTrieNode<TKeyElement, TValue> node = new AsyncSetTrieDictionaryNode<TKeyElement, TValue>();
         if (!children.TryAdd(keyElement, node))
         {
