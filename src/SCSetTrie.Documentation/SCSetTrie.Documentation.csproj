@@ -7,10 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\lib\google-code-prettify\**" />
-    <Content Remove="wwwroot\lib\google-code-prettify\**" />
-    <EmbeddedResource Remove="wwwroot\lib\google-code-prettify\**" />
-    <None Remove="wwwroot\lib\google-code-prettify\**" />
+    <EmbeddedResource Include="Razor\Pages\GettingStarted.razor.md" />
+    <EmbeddedResource Include="Razor\Pages\Home.razor.md" />
   </ItemGroup>
 
   <ItemGroup>
